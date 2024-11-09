@@ -3,7 +3,9 @@ const REFRESH_TOKEN = 'refresh_token';
 
 export const TokenService = {
   setTokens: (accessToken:string, refreshToken:string) => {
+    localStorage.removeItem(ACCESS_TOKEN);
     localStorage.setItem(ACCESS_TOKEN, accessToken);
+    localStorage.removeItem(REFRESH_TOKEN);
     localStorage.setItem(REFRESH_TOKEN, refreshToken);
   },
 

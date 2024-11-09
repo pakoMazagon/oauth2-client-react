@@ -2,6 +2,7 @@
 import './App.css'
 import Menu from './components/Menu';
 import AppRouter from './components/AppRouter';
+import { BrowserRouter } from 'react-router-dom';
 
 // const environment:object = {
 //   production: false,
@@ -20,10 +21,10 @@ function App() {
 
   return (
     <>
-      <AppRouter>
-        
-      </AppRouter>
+    <BrowserRouter>
+      <AppRouter />
       <Menu></Menu>
+    </BrowserRouter>          
     </>
   )
 }

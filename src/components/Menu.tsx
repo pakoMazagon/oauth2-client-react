@@ -1,5 +1,6 @@
 // src/components/Menu.js
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const authorize_uri:String = 'http://localhost:9000/oauth2/authorize';
 
@@ -42,14 +43,19 @@ const Menu = () => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="#">
+              <Link className="nav-link active" aria-current="page" to="/">
                 Home
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
-                Link
-              </a>
+              <Link className="nav-link active" aria-current="page" to="/user">
+                User
+              </Link>
+            </li>
+            <li className="nav-item">
+              {/* <Link className="nav-link active" aria-current="page" to="/admin">
+                Admin
+              </Link> */}
             </li>
             <li className="nav-item">
               <a className="nav-link disabled" aria-disabled="true">
