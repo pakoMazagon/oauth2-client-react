@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 
 const authorize_uri:String = 'http://localhost:9000/oauth2/authorize';
 
+const { VITE_LOGOUT_URL } = import.meta.env;
+
 const Menu = () => {
     function onLogin(): React.MouseEventHandler<HTMLButtonElement> | undefined| any {
         //throw new Error('Function not implemented.');
@@ -22,6 +24,14 @@ const Menu = () => {
         window.location.href = codeUrl; // Redirige a la URL de autorización
 
     }
+
+    function onLogout(): React.MouseEventHandler<HTMLButtonElement> | undefined| any {      
+      location.href = VITE_LOGOUT_URL;
+      const queryParams = new URLSearchParams(params).toString();
+      const codeUrl = `${authorize_uri}?${queryParams}`;
+      window.location.href = codeUrl; // Redirige a la URL de autorización
+
+  }
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -65,7 +75,7 @@ const Menu = () => {
           </ul>
           <form className="d-flex" role="search">
             <button className="btn btn-outline-success" type="button" onClick={() => onLogin()}>Login</button>
-            <button className="btn btn-outline-danger" type="button">Logout</button>
+            <button className="btn btn-outline-danger" type="button" onClick={() => onLogout()}>Logout</button>
           </form>
         </div>
       </div>

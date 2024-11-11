@@ -12,7 +12,7 @@ const AppRouter = () => {
         <Route path="/authorized" element={<Authorized />} />
         <Route path="/user" element={<User />} />
         {/* <Route path="/admin" element={<Admin />} /> */}
-        {/* <Route path="/logout" element={<Logout />} /> */}
+        <Route path="/logout" element={<Logout />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>    
   );
