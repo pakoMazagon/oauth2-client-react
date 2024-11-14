@@ -1,37 +1,51 @@
 // src/components/Menu.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { TokenService } from '../services/tokenService';
 
 const authorize_uri:String = 'http://localhost:9000/oauth2/authorize';
 
 const { VITE_LOGOUT_URL } = import.meta.env;
 
 const Menu = () => {
-    function onLogin(): React.MouseEventHandler<HTMLButtonElement> | undefined| any {
-        //throw new Error('Function not implemented.');
-        const params: any = {
-            client_id: 'pruebaCliente2',
-            redirect_uri: 'http://127.0.0.1:5173/authorized',
-            scope: 'openid',
-            response_type: 'code',
-            response_mode: 'form_post',
-            code_challenge_method: 'S256',
-            code_challenge: 'Bs-1x_FmZoiPTlGRYTNaAt6UqmVkFip_hEh-kaBGTaw',
-            token_url: 'http://localhost:9000/oauth2/token'
-        }
-        const queryParams = new URLSearchParams(params).toString();
-        const codeUrl = `${authorize_uri}?${queryParams}`;
-        window.location.href = codeUrl; // Redirige a la URL de autorización
 
-    }
+  const [isLogged, setIsLogged] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
-    function onLogout(): React.MouseEventHandler<HTMLButtonElement> | undefined| any {      
-      location.href = VITE_LOGOUT_URL;
+  useEffect(() => {
+    getLogged();
+    console.log('useEffectMenu')
+  }, [onLogin, onLogout]);
+  
+  function onLogin(): React.MouseEventHandler<HTMLButtonElement> | undefined| any {
+      //throw new Error('Function not implemented.');
+      const params: any = {
+          client_id: 'pruebaCliente2',
+          redirect_uri: 'http://127.0.0.1:5173/authorized',
+          scope: 'openid',
+          response_type: 'code',
+          response_mode: 'form_post',
+          code_challenge_method: 'S256',
+          code_challenge: 'Bs-1x_FmZoiPTlGRYTNaAt6UqmVkFip_hEh-kaBGTaw',
+          token_url: 'http://localhost:9000/oauth2/token'
+      }
       const queryParams = new URLSearchParams(params).toString();
       const codeUrl = `${authorize_uri}?${queryParams}`;
       window.location.href = codeUrl; // Redirige a la URL de autorización
 
   }
+
+  function onLogout(): React.MouseEventHandler<HTMLButtonElement> | undefined| any {      
+    //location.href = VITE_LOGOUT_URL;        
+    // TokenService.clearTokens();
+    window.location.href = VITE_LOGOUT_URL; // Redirige a la URL de autorización
+  }
+
+  const getLogged = () => {
+    console.log('getLogged en MENU')
+    setIsLogged(TokenService.isLogged());
+    setIsAdmin(TokenService.isAdmin());
+  };
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -57,16 +71,20 @@ const Menu = () => {
                 Home
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/user">
-                User
-              </Link>
-            </li>
-            <li className="nav-item">
-              {/* <Link className="nav-link active" aria-current="page" to="/admin">
-                Admin
-              </Link> */}
-            </li>
+            {isLogged && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/user">
+                  User
+                </Link>
+              </li>
+            )}
+            {isAdmin && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/admin">
+                  Admin
+                </Link>
+              </li>
+            )}
             <li className="nav-item">
               <a className="nav-link disabled" aria-disabled="true">
                 Disabled
@@ -74,8 +92,11 @@ const Menu = () => {
             </li>
           </ul>
           <form className="d-flex" role="search">
-            <button className="btn btn-outline-success" type="button" onClick={() => onLogin()}>Login</button>
+            {!isLogged ? (
+              <button className="btn btn-outline-success" type="button" onClick={() => onLogin()}>Login</button>
+            ) : (
             <button className="btn btn-outline-danger" type="button" onClick={() => onLogout()}>Logout</button>
+            )}
           </form>
         </div>
       </div>

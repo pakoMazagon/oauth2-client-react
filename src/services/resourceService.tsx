@@ -11,5 +11,5 @@ export const getUser = async (): Promise<string> => {
 export const getAdmin = async (): Promise<string> => {
     const adminUrl = VITE_RESOURCE_URL + 'admin';
     const response = await fetchWithAuth(adminUrl)
-    return await response.json();
+    return await response;
 }

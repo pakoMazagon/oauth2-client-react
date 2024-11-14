@@ -3,6 +3,7 @@ import Home from './Home';
 import Authorized from './Authorized';
 import { User } from './User';
 import { Logout } from './Logout';
+import { Admin } from './Admin';
 
 const AppRouter = () => {
   return (
@@ -11,7 +12,7 @@ const AppRouter = () => {
         <Route path="/" element={<Home />} />
         <Route path="/authorized" element={<Authorized />} />
         <Route path="/user" element={<User />} />
-        {/* <Route path="/admin" element={<Admin />} /> */}
+        <Route path="/admin" element={<Admin />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>    
