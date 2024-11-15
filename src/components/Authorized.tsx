@@ -7,6 +7,7 @@ import {TokenService} from "../services/tokenService";
 const Authorized: React.FC = () => {
 
   const [code, setCode] = useState<string>('');
+  const [codeVerifier, setCodeVerifier] = useState<string>('');
   const [token, setToken] = useState<TokenResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const location = useLocation();
@@ -17,15 +18,19 @@ const Authorized: React.FC = () => {
     const codeParam = params.get('code');
     if(codeParam){
       setCode(codeParam)
+    }    
+    const codeVerifierConst = TokenService.getVerifier();
+    if(codeVerifierConst){
+      setCodeVerifier(codeVerifierConst);
     }
   }, [location]);
 
   useEffect(() => {
-    // Llamar al servicio `getToken` si tenemos el código de autorización
+    // Llamar al servicio `getToken` si tenemos el código de autorización    
     const fetchToken = async () => {
       if (code) {
         try {
-          const response = await getToken(code);
+          const response = await getToken(code,codeVerifier);
           setToken(response); // Guardar el token en el estado
           TokenService.setTokens(response.access_token, response.refresh_token);
           navigate("/");

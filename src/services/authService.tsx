@@ -7,16 +7,16 @@ export interface TokenResponse {
     [key: string]: any; // Para otros campos que puedan estar en la respuesta
 }
 
-const { VITE_TOKEN_URL, VITE_GRANT_TYPE, VITE_CLIENT_ID, VITE_REDIRECT_URI, VITE_SCOPE, VITE_CODE_VERIFIER } = import.meta.env;
+const { VITE_TOKEN_URL, VITE_GRANT_TYPE, VITE_CLIENT_ID, VITE_REDIRECT_URI, VITE_SCOPE} = import.meta.env;
 
 
-export const getToken = async (code: string): Promise<TokenResponse> => {
+export const getToken = async (code: string, code_verifier: string): Promise<TokenResponse> => {
     const body = new URLSearchParams();
     body.set('grant_type', VITE_GRANT_TYPE || '');
     body.set('client_id', VITE_CLIENT_ID || '');
     body.set('redirect_uri', VITE_REDIRECT_URI || '');
     body.set('scope', VITE_SCOPE || '');
-    body.set('code_verifier', VITE_CODE_VERIFIER || '');
+    body.set('code_verifier', code_verifier || '');
     body.set('code', code);
 
     const basicAuth = 'Basic ' + btoa('pruebaCliente2:secretCliente');

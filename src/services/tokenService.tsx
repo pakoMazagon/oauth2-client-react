@@ -1,5 +1,10 @@
+import CryptoJS from 'crypto-js';
+
 const ACCESS_TOKEN = 'access_token';
 const REFRESH_TOKEN = 'refresh_token';
+const CODE_VERIFIER = 'code_verifier';
+
+const { VITE_SECRET_PKCE } = import.meta.env;
 
 export const TokenService = {
   setTokens: (accessToken:string, refreshToken:any) => {
@@ -43,5 +48,24 @@ export const TokenService = {
       return false;
     }
     return true;
-  }
+  },
+
+  setVerifier(code_verifier:string): void{
+    if(localStorage.getItem(CODE_VERIFIER)){
+      TokenService.deleteVerifier();
+    }
+    const encrypted:any = CryptoJS.AES.encrypt(code_verifier, VITE_SECRET_PKCE);
+    localStorage.setItem(CODE_VERIFIER, encrypted);
+  },
+
+  getVerifier(): string{
+    const encrypted:any = localStorage.getItem(CODE_VERIFIER);
+    const decrypted = CryptoJS.AES.decrypt(encrypted, VITE_SECRET_PKCE).toString(CryptoJS.enc.Utf8);
+    return decrypted;
+  },
+  
+
+  deleteVerifier():void{
+    localStorage.removeItem(CODE_VERIFIER);
+  },
 };

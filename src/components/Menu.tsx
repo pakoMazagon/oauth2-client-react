@@ -2,10 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TokenService } from '../services/tokenService';
+import CryptoJS from 'crypto-js';
 
 const authorize_uri:String = 'http://localhost:9000/oauth2/authorize';
+const CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-const { VITE_LOGOUT_URL } = import.meta.env;
+const { VITE_LOGOUT_URL, VITE_CODE_CHALLENGE_METHOD } = import.meta.env;
 
 const Menu = () => {
 
@@ -18,17 +20,19 @@ const Menu = () => {
   }, [onLogin, onLogout]);
   
   function onLogin(): React.MouseEventHandler<HTMLButtonElement> | undefined| any {
-      //throw new Error('Function not implemented.');
+      
       const params: any = {
           client_id: 'pruebaCliente2',
           redirect_uri: 'http://127.0.0.1:5173/authorized',
           scope: 'openid',
           response_type: 'code',
           response_mode: 'form_post',
-          code_challenge_method: 'S256',
-          code_challenge: 'Bs-1x_FmZoiPTlGRYTNaAt6UqmVkFip_hEh-kaBGTaw',
-          token_url: 'http://localhost:9000/oauth2/token'
+          // token_url: 'http://localhost:9000/oauth2/token',
+          code_challenge_method: VITE_CODE_CHALLENGE_METHOD
       }
+      const code_verifier = generateCodeVerifier();
+      TokenService.setVerifier(code_verifier);
+      params.code_challenge = generateCodeChallenge(code_verifier);
       const queryParams = new URLSearchParams(params).toString();
       const codeUrl = `${authorize_uri}?${queryParams}`;
       window.location.href = codeUrl; // Redirige a la URL de autorización
@@ -39,6 +43,21 @@ const Menu = () => {
     //location.href = VITE_LOGOUT_URL;        
     // TokenService.clearTokens();
     window.location.href = VITE_LOGOUT_URL; // Redirige a la URL de autorización
+  }
+
+  const generateCodeVerifier = ():string =>{
+    let result = '';
+    const char_lenght = CHARACTERS.length;
+    for(let i=0; i<44;i++){
+      result += CHARACTERS.charAt((Math.floor(Math.random() * char_lenght)))
+    }
+    return result;
+  }
+
+  const generateCodeChallenge =(code_verifier:string):string => {
+    const codeVerifierHash = CryptoJS.SHA256(code_verifier).toString(CryptoJS.enc.Base64);
+    const code_challenge = codeVerifierHash.replace(/=/g, '').replace(/\+/g,'-').replace(/\//g,'_');
+    return code_challenge;
   }
 
   const getLogged = () => {
