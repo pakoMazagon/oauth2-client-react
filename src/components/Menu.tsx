@@ -24,7 +24,7 @@ const Menu = () => {
       const params: any = {
           client_id: 'pruebaCliente2',
           redirect_uri: 'http://127.0.0.1:5173/authorized',
-          scope: 'openid',
+          scope: 'openid profile',
           response_type: 'code',
           response_mode: 'form_post',
           // token_url: 'http://localhost:9000/oauth2/token',
