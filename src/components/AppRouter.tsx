@@ -4,6 +4,7 @@ import Authorized from './Authorized';
 import { User } from './User';
 import { Logout } from './Logout';
 import { Admin } from './Admin';
+import RutasMesas from '../mesas/routes/RutasMesas';
 
 const AppRouter = () => {
   return (
@@ -13,6 +14,7 @@ const AppRouter = () => {
         <Route path="/authorized" element={<Authorized />} />
         <Route path="/user" element={<User />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/mesas/*" element={<RutasMesas />}/>
         <Route path="/logout" element={<Logout />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>    

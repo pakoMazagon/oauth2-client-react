@@ -70,7 +70,7 @@ const Menu = () => {
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
         <a className="navbar-brand" href="#">
-          Navbar
+          El Choco
         </a>
         <button
           className="navbar-toggler"
@@ -94,6 +94,13 @@ const Menu = () => {
               <li className="nav-item">
                 <Link className="nav-link" to="/user">
                   User
+                </Link>
+              </li>
+            )}
+            {isLogged && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/mesas">
+                  Mesas
                 </Link>
               </li>
             )}
