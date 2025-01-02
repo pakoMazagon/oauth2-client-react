@@ -1,0 +1,43 @@
+#libreta {
+    /* grid-area: libreta; */
+    padding: 20px;
+    background-color: #f9f9f9; /* Fondo claro para distinguir */
+    border-right: 1px solid #ccc; /* Línea divisoria */
+  }
+  
+  #familiaProductos {
+    /* grid-area: familiaProductos; */
+    padding: 20px;
+    background-color: #ffffff; /* Fondo claro */
+  }
+  
+  #layoutLibreta {
+    display: grid;
+    grid-template-columns: 30% 70%;
+    /*height: 100vh; /* Asegura que ocupe toda la pantalla */
+  }
+
+  .familiasGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+    border: solid blue 1px;
+  }
+
+  .productosGrid{
+    display: grid;
+    border: solid black 1px;
+    grid-template-columns: repeat(auto-fit,minmax(120px,1fr));
+    /*grid-template-rows: minmax(90px, auto); /* Ajusta el mínimo a 90px, pero deja que crezca */
+    /* gap: 0.51px;     */
+  }
+
+  .productosGrid .card {
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    word-wrap: break-word; /* Ajusta palabras largas */
+    font-size: 15px;
+
+  }

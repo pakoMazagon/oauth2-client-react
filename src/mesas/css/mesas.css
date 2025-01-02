@@ -27,6 +27,8 @@ body{
     display: grid;
     gap: 5px;
     grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+    /* align-items: start; */
+    grid-auto-rows: 1fr; /* Filas con alturas uniformes */
 }
 
 .destinoMesa{

@@ -25,7 +25,7 @@ const DestinoMesa = ({nombreTradicional, numero, sector, nombreActual,ocupada,ca
   return (    
     <>        
         <div className="destinoMesa">
-            <div><img src={imagenDeMesa} alt="Mesa Salon comedor"/></div>
+            <div><img src={imagenDeMesa} alt="Mesa Salon comedor" style={{ width: '100px', height: '100px' }}/></div>
             <div className="nombreTradicional"><span>{nombreTradicional} </span> {nombreActual}</div>            
             <div className="camarero">{camarero}
                 {ocupada === true?

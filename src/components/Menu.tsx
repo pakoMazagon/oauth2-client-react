@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TokenService } from '../services/tokenService';
 import CryptoJS from 'crypto-js';
+import LogoBar from '../assets/LogoBar.png';
 
 const authorize_uri:String = 'http://localhost:9000/oauth2/authorize';
 const CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -70,7 +71,8 @@ const Menu = () => {
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
         <a className="navbar-brand" href="#">
-          El Choco
+          <img src={LogoBar} style={{ height: '50px' }}></img>
+
         </a>
         <button
           className="navbar-toggler"

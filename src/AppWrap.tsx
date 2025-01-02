@@ -22,8 +22,8 @@ function AppWrap() {
 
   return (
     <>
-      <AppRouter />
-      <Menu ref={menuRef}></Menu>    
+      <Menu ref={menuRef}></Menu>
+      <AppRouter />      
     </>
   )
 }
