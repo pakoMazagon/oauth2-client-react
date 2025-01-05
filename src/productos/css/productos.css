@@ -13,9 +13,75 @@
   
   #layoutLibreta {
     display: grid;
-    grid-template-columns: 30% 70%;
+    grid-template-columns: 33% 62%;
     /*height: 100vh; /* Asegura que ocupe toda la pantalla */
   }
+
+  /* Tabla dentro de libreta */
+#libreta table {
+  width: 100%; /* Asegura que la tabla ocupe todo el ancho disponible */
+  table-layout: fixed; /* Distribuye equitativamente el espacio de las columnas */
+}
+
+
+#libreta th:nth-child(4), /* Encabezado de la columna del nombre */
+#libreta td:nth-child(4) { /* Celdas de la columna del nombre */
+  width: 35%; /* Más espacio para esta columna (ajústalo según lo necesites) */
+  text-align: left; /* Alinea el texto a la izquierda */
+  white-space: normal; /* Permite que el texto se ajuste en varias líneas si es necesario */
+  font-size: 15px;
+}
+
+
+#libreta th,
+#libreta td {
+  padding: 0px; /* Asegúrate de que ambos tengan el mismo padding */
+  margin: 0; /* Elimina márgenes que puedan causar desplazamientos */
+  box-sizing: border-box; /* Asegúrate de que padding y border no afecten el ancho */
+}
+
+#libreta th,
+#libreta td:not(:nth-child(4)) {
+  width: 12%; /* Distribuye el espacio restante entre las demás columnas */
+}
+
+#libreta th {
+  font-weight: bold;
+  background-color: #f0f0f0; /* Color de fondo para distinguir */
+}
+
+#libreta .ColumTabla img {
+  width: 10px; /* Tamaño pequeño para las imágenes */
+  height: 10px;
+  cursor: pointer; /* Indicador de interactividad */
+}
+
+#libreta .CantidadTabla {
+  font-size: 12px; /* Ajusta el tamaño de la fuente para que sea legible */
+}
+
+#libreta td img {
+  max-width: 12px; /* Limita el ancho máximo de las imágenes */
+  max-height: 12px; /* Limita el alto máximo de las imágenes */
+}
+
+/* #libreta td:first-child img {
+  width: 18px; /* Tamaño específico para la imagen de borrar */
+  /* height: 18px; */
+/* }  */
+
+#libreta .separar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1px; /* Espaciado entre texto y botón */
+}
+
+#libreta td:nth-child(4) {
+  text-align: left; /* Alinea el nombre del artículo a la izquierda */
+  word-wrap: break-word; /* Permite que las palabras largas se dividan en varias líneas */
+  white-space: normal; /* Permite el ajuste de línea si es necesario */
+}
 
   .familiasGrid {
     display: grid;

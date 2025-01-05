@@ -2,11 +2,17 @@ import { useState } from "react";
 import { Card, Nav, TabContainer, TabContent } from "react-bootstrap"
 import '../css/productos.css'
 
-const FamiliaProductos = ({familias, productos, productosEnFamilia}) => {
+const FamiliaProductos = ({familias, productos, productosEnFamilia, onProductoSeleccionado}) => {
     const [productosSeleccionables, setProductosSeleccionables] = useState([...productosEnFamilia]);
     const actualizarProductosSeleccionables = (family) => {
         setProductosSeleccionables(productos.filter(p => p.familia === family));
     }
+
+    const seleccionarProducto = (producto) => {
+        if (onProductoSeleccionado) {
+          onProductoSeleccionado(producto);
+        }
+    };
 
   return (
     <>
@@ -25,7 +31,8 @@ const FamiliaProductos = ({familias, productos, productosEnFamilia}) => {
           <TabContent id="productosContainer" className="productosGrid">
             {productosSeleccionables.map(producto => {
                 return (
-                <Card bg="light" text="dark" border="secondary" body="false">
+                <Card bg="light" text="dark" border="secondary" body="false" 
+                  onClick={() => seleccionarProducto(producto)} style={{ cursor: "pointer" }}>
                     {producto.nombre}
                 </Card>              
                 )
