@@ -1,7 +1,8 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom"
 import dataMesas from "../datos/dataSalones.js"
 import FamiliaProductos from "../../productos/paginas/FamiliaProductos.js";
-import dataProductos from "../../productos/datos/dataProductos.js"
+// import dataProductos from "../../productos/datos/dataProductos.js"
+import { useProductos } from '../../contextos/contextoProductos.js';
 import '../../productos/css/productos.css'
 import { useState } from "react";
 import { Button, Modal, Spinner, Table } from "react-bootstrap";
@@ -12,6 +13,8 @@ import imgCheck from "../../assets/check.png"
 import imgNota from "../../assets/nota.png"
 
 const Libreta = () => {
+    const dataProductos = useProductos();
+    console.log('dataProductos:', dataProductos);
     const { sector, nombreTradicional} = useParams();    
     const mesaEncontrada = dataMesas.find(dato => dato.sector===sector && dato.nombreTradicional===nombreTradicional);
     

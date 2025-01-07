@@ -6,12 +6,28 @@ const CODE_VERIFIER = 'code_verifier';
 
 const { VITE_SECRET_PKCE } = import.meta.env;
 
+type TokenListener = () => void;
+
+const listeners: TokenListener[] = [];
+
 export const TokenService = {
   setTokens: (accessToken:string, refreshToken:any) => {
     localStorage.removeItem(ACCESS_TOKEN);
     localStorage.setItem(ACCESS_TOKEN, accessToken);
     localStorage.removeItem(REFRESH_TOKEN);
     localStorage.setItem(REFRESH_TOKEN, refreshToken);
+
+    // Notificar a los oyentes que los tokens se han configurado
+    listeners.forEach((listener) => listener());
+  },
+
+  onTokenSet: (listener: TokenListener) => {
+    listeners.push(listener);
+  },
+
+  removeTokenListener: (listener: TokenListener) => {
+    const index = listeners.indexOf(listener);
+    if (index > -1) listeners.splice(index, 1);
   },
 
   getAccessToken: () => {
