@@ -3,6 +3,7 @@ import './App.css'
 import { BrowserRouter, } from 'react-router-dom';
 import AppWrap from './AppWrap';
 import { ProductosContextProvider } from './contextos/contextoProductos';
+import { MesasContextProvider } from './contextos/contextoMesas';
 
 
 
@@ -12,7 +13,9 @@ function App() {
     <>
     <BrowserRouter>
       <ProductosContextProvider>
-        <AppWrap></AppWrap>
+        <MesasContextProvider>
+          <AppWrap></AppWrap>
+        </MesasContextProvider>        
       </ProductosContextProvider>      
     </BrowserRouter>          
     </>

@@ -1,19 +1,70 @@
 #libreta {
     /* grid-area: libreta; */
-    padding: 20px;
+    padding-top: 10px;
     background-color: #f9f9f9; /* Fondo claro para distinguir */
     border-right: 1px solid #ccc; /* Línea divisoria */
+    display: grid;
+    grid-template-columns: auto 90%; /* Barra de acciones (izquierda) y tabla (derecha) */
+  }
+
+  #actionBar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px; /* Espaciado entre los botones */
+    background-color: #f5f5f5; /* Fondo claro */    
+    border-right: 1px solid #ccc; /* Línea divisoria */
+  }
+
+  #actionBar button {
+    background: none;
+    border: none;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;    
+    width: 100%; /* Ocupa todo el ancho disponible */
+    cursor: pointer; /* Indicador táctil */
+  }
+
+  #actionBar button:active {
+    background-color: #ddd; /* Retroalimentación táctil */
+    border-radius: 5px;
+  }
+
+  #actionBar img {
+    width: 30px; /* Tamaño táctil */
+    height: 30px;
+  }
+
+  #actionBar .actionLabel {
+    font-size: 12px; /* Texto claro y legible */
+    color: #333; /* Buen contraste */
+  }
+
+  #libretaTable {
+    overflow-y: auto; /* Desplazamiento si el contenido es largo */
+    width: 100%; /* Ocupa el resto del espacio */
+  }
+
+  #libretaTable img{
+    width: 30px; /* Tamaño táctil */
+    height: 30px;
+    border-radius: 30%;
   }
   
   #familiaProductos {
     /* grid-area: familiaProductos; */
-    padding: 20px;
+    padding-top: 1px;
+    padding-left: 5px;
+    /* padding-bottom: 20px; */
     background-color: #ffffff; /* Fondo claro */
   }
   
   #layoutLibreta {
     display: grid;
-    grid-template-columns: 33% 62%;
+    grid-template-columns: 50% 50%;
     /*height: 100vh; /* Asegura que ocupe toda la pantalla */
   }
 
@@ -54,15 +105,25 @@
   width: 10px; /* Tamaño pequeño para las imágenes */
   height: 10px;
   cursor: pointer; /* Indicador de interactividad */
+  margin: 7px 0;
 }
+
+/* #libretaTable .accionesProducto {  
+  display: grid;
+  grid-template-columns: auto auto; /* Dos imágenes por fila */
+  /*gap: 10px; /* Espacio entre las imágenes */
+
+  #libretaTable .accionesProducto .Bar-borrar {
+    margin-right: 5px;
+  }
+  
+  #libretaTable .accionesProducto .Bar-nota {
+    margin-left: 5px;
+  }
 
 #libreta .CantidadTabla {
-  font-size: 12px; /* Ajusta el tamaño de la fuente para que sea legible */
-}
-
-#libreta td img {
-  max-width: 12px; /* Limita el ancho máximo de las imágenes */
-  max-height: 12px; /* Limita el alto máximo de las imágenes */
+  font-size: 16px; /* Ajusta el tamaño de la fuente para que sea legible */
+  padding: 0 2px;
 }
 
 /* #libreta td:first-child img {
