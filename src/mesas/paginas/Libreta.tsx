@@ -1,8 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom"
-// import dataMesas from "../datos/dataSalones.js"
 import {useMesas} from "../../contextos/contextoMesas.js"
 import FamiliaProductos from "../../productos/paginas/FamiliaProductos.js";
-// import dataProductos from "../../productos/datos/dataProductos.js"
 import { useProductos } from '../../contextos/contextoProductos.js';
 import '../../productos/css/productos.css'
 import { useState } from "react";
@@ -21,10 +19,10 @@ import imgSalir from "../../assets/salir.png"
 
 const Libreta = () => {
     const dataProductos = useProductos();
-    const dataMesas = useMesas();
+    const {mesas} = useMesas();
     console.log('dataProductos:', dataProductos);
     const { sector, nombreTradicional} = useParams();    
-    const mesaEncontrada = dataMesas.find(dato => dato.sector===sector && dato.nombreTradicional===nombreTradicional);
+    const mesaEncontrada = mesas.find(dato => dato.sector===sector && dato.nombreTradicional===nombreTradicional);
     
     const navegacion = useNavigate();
     const volver=()=>{

@@ -1,15 +1,38 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { TokenService } from "../services/tokenService";
 
-// Creamos el contexto
-const MesasContext = createContext({
-    mesas: [],  
-    isLoggedIn: false,
-});
+type Mesa = {
+    id: string; // UUID en string
+    numero: number;
+    sector: string;
+    nombreTradicional: string;
+    nombreActual: string;
+    ocupada: boolean;
+    camarero: string | null;
+    cantidad: number;
+    productos: any[]; // Ajusta según la estructura de productos
+    lastUpdatedAt: string; // ISO Date string
+    version: number;
+  };
 
-export function MesasContextProvider({children}) {
+type MesasContextType = {
+    mesas: Mesa[];
+    isLoggedIn: boolean;
+    fetchMesas: () => void;
+    updateMesa: (mesaId: string, updatedMesa: Mesa) => void;
+};
+  
+
+// Creamos el contexto
+// const MesasContext = createContext({
+//     mesas: [],  
+//     isLoggedIn: false,
+// });
+const MesasContext = createContext<MesasContextType | undefined>(undefined);
+
+export function MesasContextProvider({children}: { children: React.ReactNode }) {
     
-    const [mesas,setMesas] = useState([]);
+    const [mesas,setMesas] = useState<Mesa[]>([]);
     const [isLoggedIn, setIsLoggedIn] = useState(TokenService.isLogged());
 
     // Obtención de datos desde el endpoint
@@ -38,6 +61,38 @@ export function MesasContextProvider({children}) {
         }
     };
 
+    // Actualizar una mesa específica
+    const updateMesa = async (mesaId:string, updatedData:Mesa) => {
+        try {
+            const token = localStorage.getItem("access_token");
+            const response = await fetch(`http://localhost:9001/mesas`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(updatedData),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error en la llamada al backend");
+            }
+
+            const updatedMesa = await response.json();
+
+            // Actualizar el estado local de mesas
+            setMesas((prevMesas) =>
+                prevMesas.map((mesa) =>
+                    mesa.id === mesaId ? { ...mesa, ...updatedMesa } : mesa
+                )
+            );
+
+            console.log("Mesa actualizada con éxito");
+        } catch (error) {
+            console.error("Error al actualizar la mesa:", error);
+        }
+    };
+
     useEffect(() => {
         // Suscribirse al evento cuando se establecen los tokens
         const handleTokenSet = () => {
@@ -54,7 +109,7 @@ export function MesasContextProvider({children}) {
       }, []);
 
   return (
-    <MesasContext.Provider value={mesas}>
+    <MesasContext.Provider value={{mesas, fetchMesas, updateMesa}}>
         {children}
     </MesasContext.Provider>
   )
