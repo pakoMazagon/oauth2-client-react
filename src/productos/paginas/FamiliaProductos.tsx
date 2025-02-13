@@ -10,7 +10,7 @@ const FamiliaProductos = ({familias, productos, productosEnFamilia, onProductoSe
 
     const seleccionarProducto = (producto) => {
         if (onProductoSeleccionado) {
-          onProductoSeleccionado(producto);
+          onProductoSeleccionado(producto.code, producto);
         }
     };
 

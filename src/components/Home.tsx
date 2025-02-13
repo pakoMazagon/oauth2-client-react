@@ -21,7 +21,7 @@ const Home = () => {
       }
     };
     fetchData();
-  }, [setNombreCamarero]);
+  }, []);
   
   return (
     <div>Bienvenido!!! <span><b>{nombreCamarero}</b></span></div>

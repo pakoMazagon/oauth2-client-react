@@ -6,12 +6,14 @@ import mesaTerraza from "../assets/mesaTerraza.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useCamarero } from "../../contextos/contextoCamarero";
 import { useMesas } from "../../contextos/contextoMesas";
+import Alert from 'react-bootstrap/Alert';
 
-const DestinoMesa = ({id, nombreTradicional, numero, sector, nombreActual,ocupada,camarero, cantidad, productos, lastUpdatedAt, version}) => {
+const DestinoMesa = ({id, mesaReferencia, nombre, numero, sector, ocupada,camarero, cantidad, productos, lastUpdatedAt, version}) => {
     const [imagenDeMesa,setImagenDeMesa] = useState(mesaSalonBarra);
     const navigate = useNavigate(); // Hook para navegación
     const {nombreCamarero} = useCamarero();
-    const { updateMesa } = useMesas(); // Consumimos el contexto
+    const { updateMesa, fetchMesaById } = useMesas(); // Consumimos el contexto
+    const [mesaOcupadaAlert, setMesaOcupadaAlert] = useState(null);
     
     useEffect(() =>{
         if(sector === 'salonComedor'){
@@ -33,16 +35,20 @@ const DestinoMesa = ({id, nombreTradicional, numero, sector, nombreActual,ocupad
 
         try {
             if(ocupada && camarero !== nombreCamarero){
-                console.log("La mesa está ocupada por otro camarero");
+                setMesaOcupadaAlert("La mesa está ocupada por otro camarero");
+                <Alert key={variant} variant={variant}>
+                    This is a {variant} alert—check it out!
+                </Alert>
                 return;
             }
             else if(!ocupada && (camarero == null || camarero=='')){
+                // creamos la mesa de 0 ya que no está ocupada
                 const updatedMesa = {
                     id,
-                    nombreTradicional,
+                    mesaReferencia,
+                    nombre,
                     numero,
                     sector,
-                    nombreActual,
                     ocupada: true,
                     cantidad,
                     camarero: nombreCamarero,
@@ -51,10 +57,14 @@ const DestinoMesa = ({id, nombreTradicional, numero, sector, nombreActual,ocupad
                     version,
                 };
 
-                await updateMesa(id, updatedMesa); // Actualizamos la mesa
-            }            
+                await updateMesa(mesaReferencia, updatedMesa); // Actualizamos la mesa
+            } 
+            else{
+                // significa que la mesa ya esta ocupada y por tanto podemos ir a ella por id de mesaServida
+                await fetchMesaById(id); //obtenemos mesa
+            }        
             // Navegar a la ruta después de la llamada
-            navigate(`/mesas/${sector}/${nombreTradicional}`);
+            navigate(`/mesas/${sector}/${nombre}`);
         } catch (error) {
             console.error('Error en la llamada al backend:', error);
         }
@@ -63,15 +73,21 @@ const DestinoMesa = ({id, nombreTradicional, numero, sector, nombreActual,ocupad
     <>        
         <div className="destinoMesa">
             <div><img src={imagenDeMesa} alt="Mesa Salon comedor" style={{ width: '100px', height: '100px' }}/></div>
-            <div className="nombreTradicional"><span>{nombreTradicional} </span> {nombreActual}</div>            
+            <div className="nombre"><span>{nombre} </span></div>            
             <div className="camarero">{camarero}
                 {ocupada === true?
                     <div className="ocupada"></div>:
                     <div className="libre"></div>
                 }
             </div>
-            <a href={`/mesas/${sector}/${nombreTradicional}`} onClick={handleLinkClickInMesa}>Entrar</a>
-            {/* <Link to={`/mesas/${sector}/${nombreTradicional}`}>Entrar</Link>  */}
+            <a href={`/mesas/${sector}/${nombre}`} onClick={handleLinkClickInMesa}>Entrar</a>
+            {/* <Link to={`/mesas/${sector}/${nombre}`}>Entrar</Link>  */}
+            {/* Mostrar alerta si existe un mensaje */}
+            {mesaOcupadaAlert && (
+                    <Alert variant="warning" onClose={() => setMesaOcupadaAlert(null)} dismissible>
+                        {mesaOcupadaAlert}
+                    </Alert>
+            )}
         </div>        
     </>
   )

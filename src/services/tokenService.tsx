@@ -3,6 +3,7 @@ import CryptoJS from 'crypto-js';
 const ACCESS_TOKEN = 'access_token';
 const REFRESH_TOKEN = 'refresh_token';
 const CODE_VERIFIER = 'code_verifier';
+const CAMARERO = 'nombreCamarero';
 
 const { VITE_SECRET_PKCE } = import.meta.env;
 
@@ -41,11 +42,12 @@ export const TokenService = {
   clearTokens: () => {
     localStorage.removeItem(ACCESS_TOKEN);
     localStorage.removeItem(REFRESH_TOKEN);
+    localStorage.removeItem(CAMARERO);
   },
 
   isLogged: (): boolean =>{
     const localStorLogger = localStorage.getItem(ACCESS_TOKEN);
-    console.log(`localStorLogged isLogged:{$}`,localStorLogger)
+    // console.log(`localStorLogged isLogged:{$}`,localStorLogger)
     return localStorLogger != null;
   },
 

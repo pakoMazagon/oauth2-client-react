@@ -15,7 +15,7 @@ const RutasMesas = () => {
             <Route path="salonComedor" element={<SalonComedor/>}></Route>
             <Route path="terraza" element={<Terraza/>}></Route>
             <Route path="barra" element={<Barra/>}></Route>
-            <Route path=":sector/:nombreTradicional" element={<Libreta/>}></Route>
+            <Route path=":sector/:numero" element={<Libreta/>}></Route>
             <Route path="/" element={<Navigate to="salonBarra"/>}></Route>
         </Routes>
     </>

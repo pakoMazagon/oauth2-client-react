@@ -5,7 +5,9 @@ import { TokenService } from '../services/tokenService';
 import CryptoJS from 'crypto-js';
 import LogoBar from '../assets/LogoBar.png';
 
-const authorize_uri:String = 'http://localhost:9000/oauth2/authorize';
+const { VITE_AUTHORIZED_URL} = import.meta.env;
+
+const authorize_uri:String = VITE_AUTHORIZED_URL;
 const CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
 const { VITE_LOGOUT_URL, VITE_CODE_CHALLENGE_METHOD } = import.meta.env;

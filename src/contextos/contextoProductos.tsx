@@ -1,22 +1,27 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { TokenService } from "../services/tokenService";
+import { ProductoBBDD } from "../productos/dominio/ProductoTypes";
+
+  
 
 // Creamos el contexto
-const ProductosContext = createContext({
-    productos: [],  
-    isLoggedIn: false,
-});
+const ProductosContext = createContext<ProductoBBDD[]>(
+    []
+    //isLoggedIn: false,
+);
+
+const {VITE_BACK_ROOT} = import.meta.env;
 
 export function ProductosContextProvider({children}) {
     
-    const [productos,setProductos] = useState([]);
+    const [productos,setProductos] = useState<ProductoBBDD[]>([]);
     const [isLoggedIn, setIsLoggedIn] = useState(TokenService.isLogged());
 
     // Obtención de datos desde el endpoint
     const fetchProductos = async () => {
         try {
             const token = localStorage.getItem('access_token');
-            const response = await fetch('http://localhost:9001/products', {
+            const response = await fetch(`${VITE_BACK_ROOT}/products`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -39,6 +44,14 @@ export function ProductosContextProvider({children}) {
     };
 
     useEffect(() => {
+        const token = localStorage.getItem("access_token");
+        if (token) {
+            console.log("DENTRO DE useEfectContextoMESAS"+isLoggedIn)
+            fetchProductos();
+            //debido a que el contexto se inicializa con la aplicacion pero no esta logado en ese
+            // momento hacemos el subscriptor de abajo, para que llame cuando lo este...
+            // PERO debemos de poner esto tambien para que al hacer f5 vuelva a llamar
+        }
         // Suscribirse al evento cuando se establecen los tokens
         const handleTokenSet = () => {
           setIsLoggedIn(true);
@@ -61,7 +74,7 @@ export function ProductosContextProvider({children}) {
 }
 
 // Hook personalizado para acceder a los productos
-export const useProductos = () => {
+export const useProductos = (): ProductoBBDD[] => {
     const context = useContext(ProductosContext);
     if (!context) {
         throw new Error('useProductos debe usarse dentro de un ProductosProvider');

@@ -10,7 +10,7 @@ const CrearListadoMesas = ({sector}:string) => {
     <>
         <section className='listaMesas'>
             {listado.map(mesa => 
-                (<DestinoMesa key={mesa.id}{...mesa}/>)
+                (<DestinoMesa key={mesa.mesaReferencia}{...mesa}/>)
             )}
         </section>
     </>
