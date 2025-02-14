@@ -10,7 +10,7 @@ const { VITE_AUTHORIZED_URL} = import.meta.env;
 const authorize_uri:String = VITE_AUTHORIZED_URL;
 const CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-const { VITE_LOGOUT_URL, VITE_CODE_CHALLENGE_METHOD } = import.meta.env;
+const { VITE_LOGOUT_URL, VITE_CODE_CHALLENGE_METHOD, VITE_REDIRECT_URI } = import.meta.env;
 
 const Menu = () => {
 
@@ -26,7 +26,7 @@ const Menu = () => {
       
       const params: any = {
           client_id: 'pruebaCliente2',
-          redirect_uri: 'http://127.0.0.1:5173/authorized',
+          redirect_uri: VITE_REDIRECT_URI,
           scope: 'openid profile',
           response_type: 'code',
           response_mode: 'form_post',
