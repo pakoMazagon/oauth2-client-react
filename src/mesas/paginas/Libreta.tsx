@@ -18,13 +18,31 @@ import imgFactura from "../../assets/factura.png"
 import imgSalir from "../../assets/salir.png"
 import { ProductoBBDD, ProductoInMesa, EstadoProductoEnum } from "../../productos/dominio/ProductoTypes";
 import CalculatorModal from "./componentes/CalculatorModal.js";
+import InputProducto from "../../productos/paginas/InputProducto.js";
 
 
 const Libreta = () => {    
     const dataProductos: ProductoBBDD[] = useProductos();
     const {mesas, updateMesa} = useMesas();
-    // console.log('dataProductos:', dataProductos);
-    const { sector, numero} = useParams();    
+    const { sector, numero} = useParams();  
+    const [searchProducto, setSearchProducto] = useState('');
+    const[productosBusqueda, setProductosBusqueda] = useState([]);
+    const [mostrarListaInput, setMostrarListaInput] = useState(false);
+
+    const cambiarBusquedaProducto = (e) => {
+      console.log("Texto buscado:", e);      
+      setSearchProducto(e);
+      if(e.trim() === ''){
+          setProductosBusqueda([]);
+          setMostrarListaInput(false);
+      }
+      else{
+          setProductosBusqueda(dataProductos.filter(p => p.nombre.toLowerCase().includes(e.toLowerCase())));
+          console.log("Productos buscados:", dataProductos.filter(p => p.nombre.toLowerCase().includes(e.toLowerCase())));      
+          setMostrarListaInput(true); // Mantener la lista visible
+      }      
+    }
+    
     const mesaEncontrada = mesas.find(dato => dato.sector===sector && dato.numero==numero);
 
     const formatDateToISO = (date) => {
@@ -47,6 +65,12 @@ const Libreta = () => {
     const volver=()=>{
         navegacion(-1);
     }
+
+    const [mostrarActionBar, setMostrarActionBar] = useState(false);
+    const accionesMovil=()=>{
+      setMostrarActionBar(!mostrarActionBar);
+    }
+
     if(!mesaEncontrada){
         return <Navigate to={`/${sector}`}/>
     }
@@ -140,7 +164,7 @@ const Libreta = () => {
     <div id="layoutLibreta">
       <div id="libreta">
       {/* <!-- Barra de acciones --> */}
-        <div id="actionBar">
+        <div id="actionBar" className={mostrarActionBar ? "mostrar" : ""}>
           <button onClick={volver}>
             <img src={imgSalir} alt="Imprimir" />
             <div className="actionLabel">Volver</div>
@@ -217,14 +241,38 @@ const Libreta = () => {
               )}  
             </tbody>
           </Table>        
-          <button onClick={volver}>Volver</button>
+          <button id="botonVolver" onClick={volver}>Volver</button>
+          <button id="botonAcciones" onClick={accionesMovil}>Acciones</button>
         </div>        
       </div>
-      <div id ="familiaProductos">
+      {/* Sección visible solo en dispositivos de mayor tamaño */}
+      <div id ="familiaProductosDesktop">
         <FamiliaProductos 
           familias={familias} productos={dataProductos} 
           productosEnFamilia={productosEnFamilia} onProductoSeleccionado={agregarProducto}>          
         </FamiliaProductos>
+      </div>
+      {/* Sección para la búsqueda autocompletable */}
+      <div id="productosAutocompletable">
+        <input 
+          value={searchProducto}
+          onChange={(e) => cambiarBusquedaProducto(e.target.value)}
+          placeholder="Buscar producto..." 
+          onFocus={() => setMostrarListaInput(productosBusqueda.length > 0)} // Solo muestra si hay elementos
+          onBlur={() => setTimeout(() => setMostrarListaInput(false), 200)} // Timeout para permitir clic en sugerencias
+        />
+        {mostrarListaInput && (
+          <InputProducto
+            productos={productosBusqueda}
+            changeProductosBusqueda={cambiarBusquedaProducto}
+            onProductoSeleccionado={agregarProducto}
+          />
+        )}
+        {/* <datalist id="productosList">
+          {filteredProducts.map((producto, index) => (
+            <option key={index} value={producto.nombre} />
+          ))}
+        </datalist> */}
       </div>
       {/* Modal de calculadora */}
       {showCalculator && productoParaModificar && (

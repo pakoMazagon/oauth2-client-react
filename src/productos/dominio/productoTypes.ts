@@ -1,7 +1,7 @@
 export type ProductoBBDD = {    
     id: string; // UUID en string
     familia: string;
-    nombre: number;
+    nombre: string;
     code: string;
     precio1: number;
     precio2: number;

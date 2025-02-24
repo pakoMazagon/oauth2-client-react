@@ -79,3 +79,39 @@ img{
     display: inline-block;
     margin-bottom: 3px;
 }
+
+/*version movil*/
+@media (max-width: 768px) {
+    .menu-icon {
+      display: block; /* Se muestra en móviles */
+      color: aliceblue;
+      margin-left: auto;
+      margin: 5px;
+      margin-left: auto; /* Lo empuja a la derecha */
+    }
+  
+    .nav-links {
+      position: absolute;
+      top: 50px;
+      left: 0;
+      width: 100%;
+      background: black;
+      color: aliceblue;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      display: none;
+    }
+  
+    .nav-links.open {
+      display: flex; /* Mostrar menú cuando se abre */
+    }
+  
+    .nav-links a {
+      width: 100%;
+      text-align: center;
+      padding: 15px;
+      color: aliceblue;
+    }
+  }

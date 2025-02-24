@@ -6,6 +6,7 @@
     display: grid;
     grid-template-columns: auto 90%; /* Barra de acciones (izquierda) y tabla (derecha) */
   }
+  
 
   #actionBar {
     display: flex;
@@ -53,8 +54,60 @@
     height: 30px;
     border-radius: 30%;
   }
+
+  /* Ocultar en pantallas grandes (monitores) */
+#productosAutocompletable {
+  display: none;
+  padding: 10px;
+  background: white;
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  z-index: 1000;
+}
+
+/* Estilo del input */
+#productosAutocompletable input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 25px; /* Bordes redondeados */
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+/* Efecto al enfocar el input */
+#productosAutocompletable input:focus {
+  border-color: #007bff;
+  box-shadow: 0px 0px 8px rgba(0, 123, 255, 0.6);
+}
+/* Lista de productos sugeridos */
+#productosAutocompletable .list-group {
+  max-height: 200px; /* Altura máxima para scroll */
+  overflow-y: auto;
+  background: white;
+  border-radius: 10px;
+  margin-top: 5px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo de cada elemento de la lista */
+#productosAutocompletable .list-group-item {
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  /* transition: background 0.3s ease-in-out; */
+}
+/* Resaltar elemento al pasar el mouse o tocar */
+#productosAutocompletable .list-group-item:hover {
+  background: #f8f9fa;
+}
+
+
   
-  #familiaProductos {
+  #familiaProductosDesktop {
     /* grid-area: familiaProductos; */
     padding-top: 1px;
     padding-left: 5px;
@@ -111,7 +164,8 @@
 /* #libretaTable .accionesProducto {  
   display: grid;
   grid-template-columns: auto auto; /* Dos imágenes por fila */
-  /*gap: 10px; /* Espacio entre las imágenes */
+  /*gap: 10px; /* Espacio entre las imágenes */  
+  
 
   #libretaTable .accionesProducto .Bar-borrar {
     margin-right: 5px;
@@ -167,4 +221,108 @@
     word-wrap: break-word; /* Ajusta palabras largas */
     font-size: 15px;
 
+  }
+
+  #botonAcciones{
+    display: none
+  }
+
+  /*Version movil*/
+  @media (max-width: 768px) {
+    .action-btn {
+      position: fixed;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1050;
+      background-color: #007bff;
+      border: none;
+      padding: 10px 15px;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      border-radius: 50%;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    /*familia o input a escribir prodctos a buscar*/    
+    #productosAutocompletable {
+      display: block;
+    }
+    #familiaProductosDesktop {
+      display: none;
+    }
+    /*barra acciones con la mesa*/
+    #actionBar {
+      position: fixed;
+      left: -100%; /* Lo mueve fuera de la pantalla */
+      top: 0;
+      height: 100%;
+      width: 250px; /* Ancho del menú */
+      background-color: #f5f5f5;
+      transition: left 0.3s ease-in-out;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 10px;
+      border-right: 1px solid #ccc;
+    }
+  
+    #actionBar.mostrar {
+      left: 0; /* Muestra el menú cuando se active */
+    }
+  
+    .menu-toggle {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1100;
+    }
+
+    #botonVolver{
+      color: white;
+      background: #007bff;
+    }
+
+    #botonAcciones{
+      color: white;
+      background: #f5dd45;
+      display: inline
+    }
+    /*libreta*/
+    #libreta {
+      display: flex;
+      flex-direction: column;
+    }
+    #libretaTable {
+      overflow-x: auto;
+      display: block !important;
+      width: 100%;
+    }
+  
+    #libretaTable table {
+      width: 100%;
+      min-width: 600px; /* Evita que las columnas se colapsen demasiado */
+    }
+    #layoutLibreta {
+      display: flex;
+      flex-direction: column;
+    }
+  
+    #libreta {
+      width: 100%;
+    }
+  
+    #familiaProductosDesktop {
+      display: none;
+    }
   }
