@@ -19,11 +19,13 @@ import imgSalir from "../../assets/salir.png"
 import { ProductoBBDD, ProductoInMesa, EstadoProductoEnum } from "../../productos/dominio/ProductoTypes";
 import CalculatorModal from "./componentes/CalculatorModal.js";
 import InputProducto from "../../productos/paginas/InputProducto.js";
+import RenameTableModal from "./componentes/RenameTableModal.js";
+import EstadoModal from "./componentes/EstadoModal.js";
 
 
 const Libreta = () => {    
     const dataProductos: ProductoBBDD[] = useProductos();
-    const {mesas, updateMesa} = useMesas();
+    const {mesas, updateMesaConProductos: updateMesaConProductos, updateMesaAccion} = useMesas();
     const { sector, numero} = useParams();  
     const [searchProducto, setSearchProducto] = useState('');
     const[productosBusqueda, setProductosBusqueda] = useState([]);
@@ -86,6 +88,8 @@ const Libreta = () => {
 
     const [productosSeleccionados, setProductosSeleccionados] = useState<ProductoInMesa[]>(mesaEncontrada.products || []);
     const [showCalculator, setShowCalculator] = useState<boolean>(false);
+    const [showRenameModal, setShowRenameModal] = useState<boolean>(false);
+    const [showEstadoModal, setShowEstadoModal] = useState<boolean>(false);
     const [productoParaModificar, setProductoParaModificar] = useState<ProductoInMesa | null>(null);
     
     
@@ -124,7 +128,7 @@ const Libreta = () => {
           cantidad: parseFloat(nuevosProductos.reduce((total, nuevoProducto) => total + (nuevoProducto.unidades * nuevoProducto.precio), 0).toFixed(2)),
         };
         // Llamamos a updateMesa con la nueva lista de productos
-        updateMesa(mesaEncontrada.mesaReferencia, nuevaMesa);        
+        updateMesaConProductos(mesaEncontrada.mesaReferencia, nuevaMesa);        
         //console.log(`DESPUES mesaEncontrada.products es ${JSON.stringify(nuevaMesa)}`);        
         return nuevosProductos;
       })
@@ -141,6 +145,16 @@ const Libreta = () => {
       setProductoParaModificar(producto);
       setShowCalculator(true);
     };
+
+     // Función para abrir el modal de modificar nombre
+     const modificarNombreModal = () => {            
+      setShowRenameModal(true);
+    };
+
+    const modificarEstadoModal = (producto: ProductoInMesa) => {
+      setShowEstadoModal(true);
+      setProductoParaModificar(producto);
+    }
 
     // Callback que se invoca al aplicar un valor en la calculadora
     const handleApplyCalculator = (valor: number, precio: Boolean) => {
@@ -159,6 +173,27 @@ const Libreta = () => {
       setShowCalculator(false);
       setProductoParaModificar(null);
     };
+
+    // Función que se ejecuta cuando se guarda el nuevo nombre
+  const handleRenameSubmit = (newName:string) => {
+    console.log("Nuevo nombre de la mesa:", newName);
+    //mesaEncontrada.nombre = newName;
+    updateMesaAccion(mesaEncontrada.id, newName);
+  };
+
+  // Función que se ejecuta cuando se cambia el estado
+  const handleEstadoSubmit = (nuevoEstado:String) => {
+    if (!productoParaModificar) return;
+
+    setProductosSeleccionados((prevProductos) => 
+      prevProductos.map((p) => 
+        p.code === productoParaModificar.code
+        ? {...p, estado:nuevoEstado}
+        : p
+      )
+    );
+    setProductoParaModificar(null); // Limpiar el producto modificado
+  };
 
   return (
     <div id="layoutLibreta">
@@ -192,7 +227,7 @@ const Libreta = () => {
         </div>
         {/* Tabla de la libreta */}
         <div id="libretaTable">
-          <h6>Mesa: {numero} ({mesaEncontrada.nombre}) <span>{mesaEncontrada.cantidad.toFixed(2)}</span><Image src={imgNota} alt="Borrar" rounded/></h6>
+          <h6>Mesa: {numero} ({mesaEncontrada.nombre}) <span>{mesaEncontrada.cantidad.toFixed(2)}</span><Image src={imgNota} alt="Borrar" rounded onClick={() => modificarNombreModal()}/></h6>
           <Table responsive="sm" hover striped>
             <thead>
               <tr>
@@ -213,19 +248,18 @@ const Libreta = () => {
                         <img className="Bar-nota" alt='Modificar' src={imgNota} onClick={() => modificarProducto(producto)} />
                       </td>
                       <td className='ColumTabla'>
-                        {/* {(producto.amount > 1) ? <img className="Bar-resta" alt='Restar' src={imgResta} onClick={() => actualizarProductosSeleccionados(producto, "resta")} /> : <span> </span>} */}
                         {<img className="Bar-resta" alt='Restar' src={imgResta} onClick={() => agregarProducto(producto.code, undefined, "-",1)} />}
                         <span className='CantidadTabla'>{producto.unidades}</span>
                         <img className="Bar-suma" alt='Sumar' src={imgSuma} onClick={() => agregarProducto(producto.code, undefined, "+",1)} />
                       </td>
                       <td>
                         {(producto.estado === "POR_PEDIR") ?
-                          <Spinner animation="grow" variant="danger" size="sm" onClick={() => handleShowState(prod)} />
+                          <Spinner animation="grow" variant="danger" size="sm" onClick={() => modificarEstadoModal(producto)} />
                           :
                           (producto.estado === "PEDIDO_A_COCINA") ?
-                            <Spinner animation="border" variant="warning" size="sm" onClick={() => handleShowState(prod)} />
+                            <Spinner animation="border" variant="warning" size="sm" onClick={() => modificarEstadoModal(producto)} />
                             :
-                            <img className="Bar-suma" alt='Servido' src={imgCheck} onClick={() => handleShowState(prod)} />
+                            <img className="Bar-suma" alt='Servido' src={imgCheck} onClick={() => modificarEstadoModal(producto)} />
                         }
                         {/* {modalState} */}
                       </td>
@@ -284,6 +318,18 @@ const Libreta = () => {
           title={`Modificar: ${productoParaModificar.nombre}`}
         />
       )}
+      {/* Agregamos el modal para renombrar la mesa */}
+      <RenameTableModal
+        show={showRenameModal}
+        onHide={() => setShowRenameModal(false)}
+        onSubmit={handleRenameSubmit}
+      />
+      {/* Agregamos el modal para cambiar estado producto */}
+      <EstadoModal
+        show={showEstadoModal}
+        onHide={() => setShowEstadoModal(false)}
+        onSubmit={handleEstadoSubmit}
+      />
     </div>
   )
 }

@@ -24,7 +24,8 @@ type MesasContextType = {
     mesas: Mesa[];
     isLoggedIn: boolean;
     fetchMesas: () => void;
-    updateMesa: (mesaReferencia: string, updatedMesa: Mesa) => void;
+    updateMesaConProductos: (mesaReferencia: string, updatedMesa: Mesa) => void;
+    updateMesaAccion: (idMesaServida: string, nuevoNombre: string) => void;
     fetchMesaById: (idMesaServida: string) => void;
 };
 
@@ -115,8 +116,8 @@ export function MesasContextProvider({children}: { children: React.ReactNode }) 
         }));
       };
 
-    // Actualizar una mesa específica
-    const updateMesa = async (mesaReferencia:string, updatedData:Mesa) => {
+    // Actualizar una mesa específica (con productos)
+    const updateMesaConProductos = async (mesaReferencia:string, updatedData:Mesa) => {
         const formattedData = {
             ...updatedData,
             lastUpdatedAt: formatDateToISO(updatedData.lastUpdatedAt),
@@ -148,6 +149,38 @@ export function MesasContextProvider({children}: { children: React.ReactNode }) 
             );
 
             console.log("Mesa actualizada con éxito");
+        } catch (error) {
+            console.error("Error al actualizar la mesa:", error);
+        }
+    };
+
+    // Actualizar un atributo de una mesa específica (o bien acciones sobre ella pero sin cambio en productos)
+    const updateMesaAccion = async (idMesaServida:string, nuevoNombre:string) => {        
+        try {
+            const token = localStorage.getItem("access_token");
+            const response = await fetch(`${VITE_BACK_ROOT}/mesas/${idMesaServida}/nombre`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({nombre: nuevoNombre}),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error en la llamada al backend");
+            }
+
+            const updatedMesa = await response.json();
+
+            // Actualizar el estado local de mesas
+            setMesas((prevMesas) =>
+                prevMesas.map((mesa) =>
+                    mesa.id === idMesaServida ? { ...mesa, nombre: nuevoNombre } : mesa
+                )
+            );
+
+            console.log("Nombre Mesa actualizado con éxito");
         } catch (error) {
             console.error("Error al actualizar la mesa:", error);
         }
@@ -253,7 +286,7 @@ useEffect(() => {
       }, []);
 
   return (
-    <MesasContext.Provider value={{mesas, fetchMesas, updateMesa, fetchMesaById}}>
+    <MesasContext.Provider value={{mesas, fetchMesas, updateMesaConProductos: updateMesaConProductos,updateMesaAccion: updateMesaAccion, fetchMesaById}}>
         {children}
     </MesasContext.Provider>
   )

@@ -3,16 +3,18 @@ import mesaBarra from "../assets/mesaBarra.png";
 import mesaSalonBarra from "../assets/mesaSalonBarra.png"; 
 import mesaSalonComedor from "../assets/mesaSalonComedor.png"; 
 import mesaTerraza from "../assets/mesaTerraza.png"; 
+import imgCheck from "../../assets/check.png"
 import { Link, useNavigate } from "react-router-dom";
 import { useCamarero } from "../../contextos/contextoCamarero";
 import { useMesas } from "../../contextos/contextoMesas";
 import Alert from 'react-bootstrap/Alert';
+import { Spinner } from "react-bootstrap";
 
-const DestinoMesa = ({id, mesaReferencia, nombre, numero, sector, ocupada,camarero, cantidad, productos, lastUpdatedAt, version}) => {
+const DestinoMesa = ({id, mesaReferencia, nombre, numero, sector, ocupada,camarero, cantidad, products: products, lastUpdatedAt, version}) => {
     const [imagenDeMesa,setImagenDeMesa] = useState(mesaSalonBarra);
     const navigate = useNavigate(); // Hook para navegación
     const {nombreCamarero} = useCamarero();
-    const { updateMesa, fetchMesaById } = useMesas(); // Consumimos el contexto
+    const { updateMesaConProductos: updateMesaConProductos, fetchMesaById } = useMesas(); // Consumimos el contexto
     const [mesaOcupadaAlert, setMesaOcupadaAlert] = useState(null);
     
     useEffect(() =>{
@@ -29,6 +31,21 @@ const DestinoMesa = ({id, mesaReferencia, nombre, numero, sector, ocupada,camare
             setImagenDeMesa(mesaTerraza);
         }
     },[sector])
+
+    // Función para determinar qué spinner o imagen mostrar según el estado de los productos
+  const renderEstadoSpinner = () => {
+    if (!products || products.length === 0) {
+        console.log('products.length === 0')
+      return;
+    }
+    if (products.some(p => p.estado === "POR_PEDIR")) {
+      return <Spinner animation="grow" variant="danger" size="sm" />;
+    } else if (products.some(p => p.estado === "PEDIDO_A_COCINA")) {
+      return <Spinner animation="border" variant="warning" size="sm" />;
+    } else {
+      return <img style={{width: '30px'}} alt="Servido" src={imgCheck} />;
+    }
+  };
     
     const handleLinkClickInMesa = async (e) => {
         e.preventDefault(); // Evitar la navegación automática del Link
@@ -52,35 +69,39 @@ const DestinoMesa = ({id, mesaReferencia, nombre, numero, sector, ocupada,camare
                     ocupada: true,
                     cantidad,
                     camarero: nombreCamarero,
-                    productos,
+                    productos: products,
                     lastUpdatedAt,
                     version,
                 };
 
-                await updateMesa(mesaReferencia, updatedMesa); // Actualizamos la mesa
+                await updateMesaConProductos(mesaReferencia, updatedMesa); // Actualizamos la mesa
             } 
             else{
                 // significa que la mesa ya esta ocupada y por tanto podemos ir a ella por id de mesaServida
                 await fetchMesaById(id); //obtenemos mesa
             }        
             // Navegar a la ruta después de la llamada
-            navigate(`/mesas/${sector}/${nombre}`);
+            navigate(`/mesas/${sector}/${numero}`);
         } catch (error) {
             console.error('Error en la llamada al backend:', error);
         }
     };
   return (    
     <>        
-        <div className="destinoMesa">
+        <div className="destinoMesa" style={{
+                            backgroundColor: ocupada ? '#f0f8ff' : '#ffffff' // '#f0f8ff' es un azul muy claro
+                        }}>
             <div><img src={imagenDeMesa} alt="Mesa Salon comedor" style={{ width: '100px', height: '100px' }}/></div>
             <div className="nombre"><span>{nombre} </span></div>            
             <div className="camarero">{camarero}
-                {ocupada === true?
-                    <div className="ocupada"></div>:
-                    <div className="libre"></div>
+                {camarero != ''?
+                    <div className="estadoMesa">
+                        {renderEstadoSpinner()}
+                    </div>
+                    :<div className="libre"></div>
                 }
             </div>
-            <a href={`/mesas/${sector}/${nombre}`} onClick={handleLinkClickInMesa}>Entrar</a>
+            <a href={`/mesas/${sector}/${numero}`} onClick={handleLinkClickInMesa}>Entrar</a>
             {/* <Link to={`/mesas/${sector}/${nombre}`}>Entrar</Link>  */}
             {/* Mostrar alerta si existe un mensaje */}
             {mesaOcupadaAlert && (

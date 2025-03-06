@@ -1,11 +1,10 @@
 import DestinoMesa from '../paginas/DestinoMesa'
 import {useMesas} from "../../contextos/contextoMesas.js"
-import { useCamarero } from "../../contextos/contextoCamarero.js";
 
 const CrearListadoMesas = ({sector}:string) => {
   const {mesas} = useMesas();
     const listado = mesas.filter(destino => destino.sector===sector)
-    console.log(`el listado es:${listado}`)
+    console.log(`el listado es:${JSON.stringify(listado, null, 2)}`)
   return (
     <>
         <section className='listaMesas'>
