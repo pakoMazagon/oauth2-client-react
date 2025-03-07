@@ -24,7 +24,7 @@ import EstadoModal from "./componentes/EstadoModal.js";
 
 
 const Libreta = () => {    
-    const dataProductos: ProductoBBDD[] = useProductos();
+    const {dataProductos,updateProductStatus} = useProductos();
     const {mesas, updateMesaConProductos: updateMesaConProductos, updateMesaAccion} = useMesas();
     const { sector, numero} = useParams();  
     const [searchProducto, setSearchProducto] = useState('');
@@ -182,16 +182,11 @@ const Libreta = () => {
   };
 
   // Función que se ejecuta cuando se cambia el estado
-  const handleEstadoSubmit = (nuevoEstado:String) => {
+  const handleEstadoSubmit = (nuevoEstado:string) => {
     if (!productoParaModificar) return;
 
-    setProductosSeleccionados((prevProductos) => 
-      prevProductos.map((p) => 
-        p.code === productoParaModificar.code
-        ? {...p, estado:nuevoEstado}
-        : p
-      )
-    );
+    productosSeleccionados.find(p => p.code === productoParaModificar.code);
+    updateProductStatus(productoParaModificar.id, nuevoEstado);
     setProductoParaModificar(null); // Limpiar el producto modificado
   };
 

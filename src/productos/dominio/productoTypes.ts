@@ -1,3 +1,10 @@
+
+//updateProductStatus
+export type ProductoContextType = {
+  dataProductos: ProductoBBDD[];
+  updateProductStatus: (idProducto:string,nuevoEstado:string) => void;
+};
+
 export type ProductoBBDD = {    
     id: string; // UUID en string
     familia: string;

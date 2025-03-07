@@ -4,7 +4,7 @@ const EstadoModal = ({ show, onHide, onSubmit }) => {
   const opcionesEstado = [
     { color: "red", estado: "POR_PEDIR", texto: "Por pedir a cocina" },
     { color: "#FFD700", estado: "PEDIDO_A_COCINA", texto: "Pedir a cocina" },
-    { color: "green", estado: "SERVIDO", texto: "Puesto en mesa" },
+    { color: "green", estado: "PUESTO_EN_MESA", texto: "Puesto en mesa" },
   ];
 
   const handleEstadoChange = (estado) => {

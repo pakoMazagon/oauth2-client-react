@@ -1,14 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { TokenService } from "../services/tokenService";
-import { ProductoBBDD } from "../productos/dominio/ProductoTypes";
+import { ProductoBBDD, ProductoContextType } from "../productos/dominio/ProductoTypes";
 
   
 
 // Creamos el contexto
-const ProductosContext = createContext<ProductoBBDD[]>(
-    []
-    //isLoggedIn: false,
-);
+const ProductosContext = createContext<ProductoContextType|undefined>(undefined);
 
 const {VITE_BACK_ROOT} = import.meta.env;
 
@@ -43,6 +40,29 @@ export function ProductosContextProvider({children}) {
         }
     };
 
+    // Actualizar un estado de un producto
+    const updateProductStatus = async (idProducto:string, nuevoEstado:string) => {        
+        try {
+            const token = localStorage.getItem("access_token");
+            const response = await fetch(`${VITE_BACK_ROOT}/products/${idProducto}/estado`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({nuevoEstado: nuevoEstado}),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error en la llamada al backend");
+            }
+
+            console.log("Estado producto actualizado");
+        } catch (error) {
+            console.error("Error al actualizar la mesa:", error);
+        }
+    };
+
     useEffect(() => {
         const token = localStorage.getItem("access_token");
         if (token) {
@@ -67,14 +87,14 @@ export function ProductosContextProvider({children}) {
       }, []);
 
   return (
-    <ProductosContext.Provider value={productos}>
+    <ProductosContext.Provider value={{dataProductos:productos, updateProductStatus:updateProductStatus}}>
         {children}
     </ProductosContext.Provider>
   )
 }
 
 // Hook personalizado para acceder a los productos
-export const useProductos = (): ProductoBBDD[] => {
+export const useProductos = (): ProductoContextType => {
     const context = useContext(ProductosContext);
     if (!context) {
         throw new Error('useProductos debe usarse dentro de un ProductosProvider');
