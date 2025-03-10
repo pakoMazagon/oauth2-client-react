@@ -25,7 +25,7 @@ type MesasContextType = {
     isLoggedIn: boolean;
     fetchMesas: () => void;
     updateMesaConProductos: (mesaReferencia: string, updatedMesa: Mesa) => void;
-    updateMesaAccion: (idMesaServida: string, nuevoNombre: string) => void;
+    updateMesaAccion: (idMesaServida: string, metodo:string, accion:string,nuevoNombre: string) => void;
     fetchMesaById: (idMesaServida: string) => void;
 };
 
@@ -155,16 +155,20 @@ export function MesasContextProvider({children}: { children: React.ReactNode }) 
     };
 
     // Actualizar un atributo de una mesa específica (o bien acciones sobre ella pero sin cambio en productos)
-    const updateMesaAccion = async (idMesaServida:string, nuevoNombre:string) => {        
+    const updateMesaAccion = async (idMesaServida:string, metodo:string, accion:string, nuevoNombre:string) => {        
         try {
             const token = localStorage.getItem("access_token");
-            const response = await fetch(`${VITE_BACK_ROOT}/mesas/${idMesaServida}/nombre`, {
-                method: "PATCH",
+            let url = `${VITE_BACK_ROOT}/mesas/${idMesaServida}`;
+            if (accion) {
+                url += `/${accion}`;
+            }
+            const response = await fetch(url, {
+                method: metodo,
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({nombre: nuevoNombre}),
+                ...(nuevoNombre ? { body: JSON.stringify({ nombre: nuevoNombre }) } : {}),
             });
 
             if (!response.ok) {

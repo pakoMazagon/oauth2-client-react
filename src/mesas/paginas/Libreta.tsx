@@ -21,6 +21,7 @@ import CalculatorModal from "./componentes/CalculatorModal.js";
 import InputProducto from "../../productos/paginas/InputProducto.js";
 import RenameTableModal from "./componentes/RenameTableModal.js";
 import EstadoModal from "./componentes/EstadoModal.js";
+import BorraMesaModal from "./componentes/BorraMesaModal.js";
 
 
 const Libreta = () => {    
@@ -89,11 +90,12 @@ const Libreta = () => {
     const [productosSeleccionados, setProductosSeleccionados] = useState<ProductoInMesa[]>(mesaEncontrada.products || []);
     const [showCalculator, setShowCalculator] = useState<boolean>(false);
     const [showRenameModal, setShowRenameModal] = useState<boolean>(false);
+    const [showBorrarMesa, setShowBorrarMesa] = useState<boolean>(false);
     const [showEstadoModal, setShowEstadoModal] = useState<boolean>(false);
     const [productoParaModificar, setProductoParaModificar] = useState<ProductoInMesa | null>(null);
     
     
-    const agregarProducto = async (code:string, producto?:ProductoBBDD, signo?:string, cantidad:number=1, precio?:number) => {   
+    const agregarProducto = async (code:string, producto?:ProductoBBDD, signo?:string, cantidad:number=1, precio?:number, cantidadTotal?:number) => {   
       console.log(`signo es ${signo} y la cantidad es ${cantidad}`)   
       setProductosSeleccionados((prevProductos) => {
         const cantidadASumar = '-'==signo? -cantidad:cantidad;
@@ -101,7 +103,7 @@ const Libreta = () => {
         let nuevosProductos = prevProductos
           .map((p) =>
             p.code === code
-              ? { ...p, unidades: p.unidades + cantidadASumar, fechaHoraCreacion: formatDateToISO(p.fechaHoraCreacion), ...(precio !== undefined ? { precio } : {}) }
+              ? { ...p, unidades: cantidadTotal !== undefined ? cantidadTotal : p.unidades + cantidadASumar, fechaHoraCreacion: formatDateToISO(p.fechaHoraCreacion), ...(precio !== undefined ? { precio } : {}) }
               : { ...p, fechaHoraCreacion: formatDateToISO(p.fechaHoraCreacion) }
           )
           .filter((p) => p.unidades > 0); // Elimina productos con cantidad 0
@@ -146,9 +148,15 @@ const Libreta = () => {
       setShowCalculator(true);
     };
 
-     // Función para abrir el modal de modificar nombre
+    // Función para abrir el modal de modificar nombre
      const modificarNombreModal = () => {            
       setShowRenameModal(true);
+    };
+
+    // Función para abrir el modal de borrar mesa
+    const borrarMesaModal = () => {    
+      console.log("BORRA MESA MODAL!")        
+      setShowBorrarMesa(true);
     };
 
     const modificarEstadoModal = (producto: ProductoInMesa) => {
@@ -162,8 +170,8 @@ const Libreta = () => {
       // Llamamos a agregarProducto para sumar el valor ingresado
       if(!precio){
         // si no es precio significa que es cantidad y a la cantidad le quitamos uno porque es lo que sumará
-        const valorAsumar = valor == 0?0: valor-1;
-        agregarProducto(productoParaModificar.code, undefined, "+", valorAsumar);
+        const valorAbsoluto = valor == 0?0: valor;
+        agregarProducto(productoParaModificar.code, undefined, "+", valorAbsoluto,undefined, valorAbsoluto);
       }      
       else{
         //significa que es precio, por tanto aplicar precio
@@ -178,8 +186,18 @@ const Libreta = () => {
   const handleRenameSubmit = (newName:string) => {
     console.log("Nuevo nombre de la mesa:", newName);
     //mesaEncontrada.nombre = newName;
-    updateMesaAccion(mesaEncontrada.id, newName);
+    updateMesaAccion(mesaEncontrada.id,"PATCH", "nombre", newName);
   };
+
+  // Funcion que se ejecuta cuando se borra la mesa
+  const handleBorrarSubmit = (confirmacion:boolean) => {
+    console.log("Borra la mesa:", mesaEncontrada.id, ",confirmacion?", confirmacion);
+    if(confirmacion){
+      updateMesaAccion(mesaEncontrada.id, "DELETE", "","");
+      volver();
+    }
+    //mesaEncontrada.nombre = newName;    
+  }
 
   // Función que se ejecuta cuando se cambia el estado
   const handleEstadoSubmit = (nuevoEstado:string) => {
@@ -215,7 +233,7 @@ const Libreta = () => {
             <Image src={imgFactura} alt="Factura" rounded/>
             <div className="actionLabel">Factura</div>
           </button>
-          <button onClick={() => console.log("Borrar")}>            
+          <button onClick={() => borrarMesaModal()}>            
             <Image src={imgBorrar} rounded />
             <div className="actionLabel">Borrar</div>
           </button>          
@@ -318,6 +336,12 @@ const Libreta = () => {
         show={showRenameModal}
         onHide={() => setShowRenameModal(false)}
         onSubmit={handleRenameSubmit}
+      />
+      {/* Agregamos el modal para borrar la mesa */}
+      <BorraMesaModal
+        show={showBorrarMesa}
+        onHide={() => setShowBorrarMesa(false)}
+        onSubmit={handleBorrarSubmit}
       />
       {/* Agregamos el modal para cambiar estado producto */}
       <EstadoModal
