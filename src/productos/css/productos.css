@@ -39,6 +39,11 @@
     height: 30px;
   }
 
+  .botonesCobro img {
+    width: 30px; /* Tamaño táctil */
+    height: 30px;
+  }
+
   #actionBar .actionLabel {
     font-size: 12px; /* Texto claro y legible */
     color: #333; /* Buen contraste */

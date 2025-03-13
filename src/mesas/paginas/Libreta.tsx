@@ -22,6 +22,7 @@ import InputProducto from "../../productos/paginas/InputProducto.js";
 import RenameTableModal from "./componentes/RenameTableModal.js";
 import EstadoModal from "./componentes/EstadoModal.js";
 import BorraMesaModal from "./componentes/BorraMesaModal.js";
+import CobroMesaModal from "./componentes/CobroMesaModal.js";
 
 
 const Libreta = () => {    
@@ -92,6 +93,7 @@ const Libreta = () => {
     const [showRenameModal, setShowRenameModal] = useState<boolean>(false);
     const [showBorrarMesa, setShowBorrarMesa] = useState<boolean>(false);
     const [showEstadoModal, setShowEstadoModal] = useState<boolean>(false);
+    const [showCobroModal, setShowCobroModal] = useState<boolean>(false);
     const [productoParaModificar, setProductoParaModificar] = useState<ProductoInMesa | null>(null);
     
     
@@ -159,6 +161,11 @@ const Libreta = () => {
       setShowBorrarMesa(true);
     };
 
+    // Funcion para abrir el modal de cobro
+    const cobrarMesaModal = () => {
+      setShowCobroModal(true);
+    };
+
     const modificarEstadoModal = (producto: ProductoInMesa) => {
       setShowEstadoModal(true);
       setProductoParaModificar(producto);
@@ -199,6 +206,15 @@ const Libreta = () => {
     //mesaEncontrada.nombre = newName;    
   }
 
+  // Funcion que se ejecuta cuando se cobra la mesa
+  const handleCobrarSubmit = (efectivo:boolean, tpv:boolean) => {
+    console.log("Cobra la mesa:", mesaEncontrada.id);
+    const metodoPago = efectivo? "CASH":"TPV";
+    updateMesaAccion(mesaEncontrada.id, "POST", "cobrar","",metodoPago);
+    volver();
+    //mesaEncontrada.nombre = newName;    
+  }
+
   // Función que se ejecuta cuando se cambia el estado
   const handleEstadoSubmit = (nuevoEstado:string) => {
     if (!productoParaModificar) return;
@@ -221,11 +237,11 @@ const Libreta = () => {
             <img src={imgImprimir} alt="Imprimir" />
             <div className="actionLabel">Imprimir</div>
           </button>
-          <button onClick={() => console.log("Cobrar")}>
+          <button onClick={() =>cobrarMesaModal()}>
             <Image src={imgCobrar} alt="Cobrar" roundedCircle/>
             <div className="actionLabel">Cobrar</div>
           </button>
-          <button onClick={() => console.log("TPV")}>
+          <button onClick={() => cobrarMesaModal()}>
             <Image src={imgTpv} alt="TPV" roundedCircle/>
             <div className="actionLabel">TPV</div>
           </button>
@@ -342,6 +358,13 @@ const Libreta = () => {
         show={showBorrarMesa}
         onHide={() => setShowBorrarMesa(false)}
         onSubmit={handleBorrarSubmit}
+      />
+      {/* Agregamos el modal para cobrar la mesa */}
+      <CobroMesaModal
+        show={showCobroModal}
+        handleClose={() => setShowCobroModal(false)}
+        total={mesaEncontrada.cantidad}
+        onCobrar={handleCobrarSubmit}
       />
       {/* Agregamos el modal para cambiar estado producto */}
       <EstadoModal

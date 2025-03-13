@@ -25,7 +25,7 @@ type MesasContextType = {
     isLoggedIn: boolean;
     fetchMesas: () => void;
     updateMesaConProductos: (mesaReferencia: string, updatedMesa: Mesa) => void;
-    updateMesaAccion: (idMesaServida: string, metodo:string, accion:string,nuevoNombre: string) => void;
+    updateMesaAccion: (idMesaServida: string, metodo:string, accion:string,nuevoNombre: string, metodoPago?:string) => void;
     fetchMesaById: (idMesaServida: string) => void;
 };
 
@@ -155,12 +155,17 @@ export function MesasContextProvider({children}: { children: React.ReactNode }) 
     };
 
     // Actualizar un atributo de una mesa específica (o bien acciones sobre ella pero sin cambio en productos)
-    const updateMesaAccion = async (idMesaServida:string, metodo:string, accion:string, nuevoNombre:string) => {        
+    const updateMesaAccion = async (idMesaServida:string, metodo:string, accion:string, nuevoNombre:string, metodoPago?:string) => {        
         try {
             const token = localStorage.getItem("access_token");
-            let url = `${VITE_BACK_ROOT}/mesas/${idMesaServida}`;
+            let url = `${VITE_BACK_ROOT}/mesas/${idMesaServida}`;            
             if (accion) {
                 url += `/${accion}`;
+            }
+            let body = null;
+            if (accion === "cobrar"){
+                url = `${VITE_BACK_ROOT}/mesas/cobrar`;
+                body = JSON.stringify({ id: idMesaServida, tipoPago: metodoPago });
             }
             const response = await fetch(url, {
                 method: metodo,
@@ -169,6 +174,7 @@ export function MesasContextProvider({children}: { children: React.ReactNode }) 
                     Authorization: `Bearer ${token}`,
                 },
                 ...(nuevoNombre ? { body: JSON.stringify({ nombre: nuevoNombre }) } : {}),
+                ...(body ? { body } : {}),
             });
 
             if (!response.ok) {
