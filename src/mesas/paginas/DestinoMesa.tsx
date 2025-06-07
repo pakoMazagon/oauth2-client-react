@@ -48,6 +48,7 @@ const DestinoMesa = ({id, mesaReferencia, nombre, numero, sector, ocupada,camare
   };
     
     const handleLinkClickInMesa = async (e) => {
+        console.log("Aqui entra en handleLinkClickInMesa. Ocupada:"+ocupada+ ", camarero:"+camarero)
         e.preventDefault(); // Evitar la navegación automática del Link
 
         try {
@@ -58,8 +59,9 @@ const DestinoMesa = ({id, mesaReferencia, nombre, numero, sector, ocupada,camare
                 </Alert>
                 return;
             }
-            else if(!ocupada && (camarero == null || camarero=='')){
+            else if(!ocupada){
                 // creamos la mesa de 0 ya que no está ocupada
+                console.log("ENTRA DONDE DEBE");
                 const updatedMesa = {
                     id,
                     mesaReferencia,

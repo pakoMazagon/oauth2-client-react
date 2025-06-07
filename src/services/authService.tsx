@@ -21,7 +21,7 @@ export const getToken = async (code: string, code_verifier: string): Promise<Tok
 
     const basicAuth = 'Basic ' + btoa('pruebaCliente2:secretCliente');
 
-    console.log("GRANT_TYPE:", VITE_GRANT_TYPE);
+    console.log("en authService: GRANT_TYPE:", VITE_GRANT_TYPE);
 
     const response = await fetch(VITE_TOKEN_URL || '',{
         method: 'POST',

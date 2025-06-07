@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { TokenService } from '../services/tokenService';
 import CryptoJS from 'crypto-js';
 import LogoBar from '../assets/LogoBar.png';
+import { NavDropdown } from 'react-bootstrap';
 
 const { VITE_AUTHORIZED_URL} = import.meta.env;
 
@@ -23,7 +24,7 @@ const Menu = () => {
   }, [onLogin, onLogout]);
   
   function onLogin(): React.MouseEventHandler<HTMLButtonElement> | undefined| any {
-      
+      console.log("EN MENU onLogin?")
       const params: any = {
           client_id: 'pruebaCliente2',
           redirect_uri: VITE_REDIRECT_URI,
@@ -115,11 +116,29 @@ const Menu = () => {
                 </Link>
               </li>
             )}
-            <li className="nav-item">
-              <a className="nav-link disabled" aria-disabled="true">
-                Disabled
-              </a>
-            </li>
+            {isAdmin && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/arqueo">
+                  Arqueo
+                </Link>
+              </li>
+            )}
+            {isAdmin && (
+            <NavDropdown title="Operaciones" id="operaciones-dropdown">
+              <NavDropdown.Item as={Link} to="/arqueo">
+                Arqueo
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/consultas">
+                Consultas
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item as={Link} to="/operacion3">
+                <a className="nav-link disabled" aria-disabled="true">
+                  Futura Acción
+                </a>
+              </NavDropdown.Item>
+            </NavDropdown>
+            )}
           </ul>
           <form className="d-flex" role="search">
             {!isLogged ? (
