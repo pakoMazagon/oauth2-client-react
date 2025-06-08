@@ -1,7 +1,7 @@
-// src/components/ArquearModal.tsx
-
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
+
+const {VITE_BACK_ROOT} = import.meta.env;
 
 interface ArquearModalProps {
   show: boolean;
@@ -21,7 +21,7 @@ const ArquearModal: React.FC<ArquearModalProps> = ({ show, onClose, ids, usuario
     const token = localStorage.getItem('access_token');
 
     try {
-      const res = await fetch('http://localhost:9001/arqueo/arquear', {
+      const res = await fetch(`${VITE_BACK_ROOT}/arqueo/arquear`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

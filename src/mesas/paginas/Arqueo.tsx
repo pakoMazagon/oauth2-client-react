@@ -3,6 +3,8 @@ import '../css/arqueo.css';
 import ArquearModal from './componentes/ArquearModal';
 import { Button, Modal } from 'react-bootstrap';
 
+const {VITE_BACK_ROOT} = import.meta.env;
+
 
 interface Filter {
     field: string;
@@ -42,7 +44,7 @@ const Arqueo: React.FC = () => {
       const token = localStorage.getItem('access_token');
 
       try {
-        const response = await fetch('http://localhost:9001/arqueo/camareros/buscar', {
+        const response = await fetch(`${VITE_BACK_ROOT}/arqueo/camareros/buscar`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -89,7 +91,7 @@ const Arqueo: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:9001/arqueo/buscar', {
+      const response = await fetch(`${VITE_BACK_ROOT}/arqueo/buscar`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
