@@ -5,6 +5,7 @@ import AppWrap from './AppWrap';
 import { ProductosContextProvider } from './contextos/contextoProductos';
 import { MesasContextProvider } from './contextos/contextoMesas';
 import { CamareroProvider } from './contextos/contextoCamarero';
+import { PedidosProvider } from './cocina/contextos/contextoPedidos';
 
 
 
@@ -14,10 +15,12 @@ function App() {
     <>
     <BrowserRouter>
       <CamareroProvider>
-        <ProductosContextProvider>
-          <MesasContextProvider>        
-            <AppWrap></AppWrap>
-          </MesasContextProvider>        
+        <ProductosContextProvider>          
+            <MesasContextProvider>
+              <PedidosProvider>
+                <AppWrap></AppWrap>
+              </PedidosProvider> 
+            </MesasContextProvider>                           
         </ProductosContextProvider>      
       </CamareroProvider>      
     </BrowserRouter>          

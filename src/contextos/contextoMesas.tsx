@@ -181,8 +181,6 @@ export function MesasContextProvider({children}: { children: React.ReactNode }) 
                 throw new Error("Error en la llamada al backend");
             }
 
-            const updatedMesa = await response.json();
-
             // Actualizar el estado local de mesas
             setMesas((prevMesas) =>
                 prevMesas.map((mesa) =>

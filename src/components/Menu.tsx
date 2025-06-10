@@ -124,12 +124,12 @@ const Menu = () => {
               </li>
             )}
             {isAdmin && (
-            <NavDropdown title="Operaciones" id="operaciones-dropdown">
+            <NavDropdown title="Acciones" id="operaciones-dropdown">
               <NavDropdown.Item as={Link} to="/arqueo">
                 Arqueo
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/consultas">
-                Consultas
+              <NavDropdown.Item as={Link} to="/cocina">
+                Cocina
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item as={Link} to="/operacion3">
