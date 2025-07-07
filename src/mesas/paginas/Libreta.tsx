@@ -16,22 +16,24 @@ import imgBorrar from "../../assets/borrar.png"
 import imgTpv from "../../assets/tpv.png"
 import imgFactura from "../../assets/factura.png"
 import imgSalir from "../../assets/salir.png"
-import { ProductoBBDD, ProductoInMesa, EstadoProductoEnum } from "../../productos/dominio/ProductoTypes";
+import imgCamarero from "../../assets/camarero.png"
+import { ProductoBBDD, ProductoInMesa, EstadoProductoEnum } from "../../productos/dominio/ProductoTypes.js";
 import CalculatorModal from "./componentes/CalculatorModal.js";
 import InputProducto from "../../productos/paginas/InputProducto.js";
 import RenameTableModal from "./componentes/RenameTableModal.js";
 import EstadoModal from "./componentes/EstadoModal.js";
 import BorraMesaModal from "./componentes/BorraMesaModal.js";
 import CobroMesaModal from "./componentes/CobroMesaModal.js";
+import {CambiarCamareroModal} from "./componentes/CambiarCamareroModal.tsx";
 
 
 const Libreta = () => {    
     const {dataProductos,updateProductStatus} = useProductos();
-    const {mesas, updateMesaConProductos: updateMesaConProductos, updateMesaAccion} = useMesas();
+    const {mesas, updateMesaConProductos: updateMesaConProductos, updateMesaAccion} = useMesas();    
     const { sector, numero} = useParams();  
     const [searchProducto, setSearchProducto] = useState('');
     const[productosBusqueda, setProductosBusqueda] = useState([]);
-    const [mostrarListaInput, setMostrarListaInput] = useState(false);
+    const [mostrarListaInput, setMostrarListaInput] = useState(false);    
 
     const cambiarBusquedaProducto = (e) => {
       console.log("Texto buscado:", e);      
@@ -94,6 +96,7 @@ const Libreta = () => {
     const [showBorrarMesa, setShowBorrarMesa] = useState<boolean>(false);
     const [showEstadoModal, setShowEstadoModal] = useState<boolean>(false);
     const [showCobroModal, setShowCobroModal] = useState<boolean>(false);
+    const [showCambiarCamareroModal, setShowCambiarCamareroModal] = useState<boolean>(false);
     const [productoParaModificar, setProductoParaModificar] = useState<ProductoInMesa | null>(null);
     
     
@@ -252,7 +255,11 @@ const Libreta = () => {
           <button onClick={() => borrarMesaModal()}>            
             <Image src={imgBorrar} rounded />
             <div className="actionLabel">Borrar</div>
-          </button>          
+          </button> 
+          <button onClick={() => setShowCambiarCamareroModal(true)}>
+            <Image src={imgCamarero} alt="Cambiar camarero" roundedCircle/>
+            <div className="actionLabel">Camarero</div>
+          </button>         
         </div>
         {/* Tabla de la libreta */}
         <div id="libretaTable">
@@ -371,6 +378,16 @@ const Libreta = () => {
         show={showEstadoModal}
         onHide={() => setShowEstadoModal(false)}
         onSubmit={handleEstadoSubmit}
+      />
+      {/* Agregamos el modal para cambiar camarero */}
+      <CambiarCamareroModal
+        open={showCambiarCamareroModal}
+        onClose={() => setShowCambiarCamareroModal(false)}
+        mesaId={mesaEncontrada.id}
+        onSuccess={() =>{
+          volver();
+          //Opcional: Toast recarga....
+        }}
       />
     </div>
   )

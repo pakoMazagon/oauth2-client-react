@@ -167,6 +167,10 @@ export function MesasContextProvider({children}: { children: React.ReactNode }) 
                 url = `${VITE_BACK_ROOT}/mesas/cobrar`;
                 body = JSON.stringify({ id: idMesaServida, tipoPago: metodoPago });
             }
+            else if (accion === "cambiarCamarero") {
+                url = `${VITE_BACK_ROOT}/mesas/${idMesaServida}/camarero`;
+                body = JSON.stringify({ camarero: nuevoNombre });
+            }
             const response = await fetch(url, {
                 method: metodo,
                 headers: {
@@ -184,7 +188,9 @@ export function MesasContextProvider({children}: { children: React.ReactNode }) 
             // Actualizar el estado local de mesas
             setMesas((prevMesas) =>
                 prevMesas.map((mesa) =>
-                    mesa.id === idMesaServida ? { ...mesa, nombre: nuevoNombre } : mesa
+                    mesa.id === idMesaServida ? accion === "cambiarCamarero"
+                                ? { ...mesa, camarero: nuevoNombre }
+                                : { ...mesa, nombre: nuevoNombre } : mesa
                 )
             );
 

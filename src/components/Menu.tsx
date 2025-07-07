@@ -5,6 +5,8 @@ import { TokenService } from '../services/tokenService';
 import CryptoJS from 'crypto-js';
 import LogoBar from '../assets/LogoBar.png';
 import { NavDropdown } from 'react-bootstrap';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 
 const { VITE_AUTHORIZED_URL} = import.meta.env;
 
@@ -14,6 +16,15 @@ const CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567
 const { VITE_LOGOUT_URL, VITE_CODE_CHALLENGE_METHOD, VITE_REDIRECT_URI } = import.meta.env;
 
 const Menu = () => {
+
+  const closeNavbar = () => {
+    const navbar = document.getElementById('navbarSupportedContent');
+    if (navbar?.classList.contains('show')) {
+      const bsCollapse = bootstrap.Collapse.getInstance(navbar) || new bootstrap.Collapse(navbar, { toggle: false });
+      bsCollapse.hide();
+    }
+  };
+  
 
   const [isLogged, setIsLogged] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
@@ -91,48 +102,48 @@ const Menu = () => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/">
+              <Link className="nav-link active" aria-current="page" to="/" onClick={closeNavbar}>
                 Home
               </Link>
             </li>
             {isLogged && (
               <li className="nav-item">
-                <Link className="nav-link" to="/user">
+                <Link className="nav-link" to="/user" onClick={closeNavbar}>
                   User
                 </Link>
               </li>
             )}
             {isLogged && (
               <li className="nav-item">
-                <Link className="nav-link" to="/mesas">
+                <Link className="nav-link" to="/mesas" onClick={closeNavbar}>
                   Mesas
                 </Link>
               </li>
             )}
             {isAdmin && (
               <li className="nav-item">
-                <Link className="nav-link" to="/admin">
+                <Link className="nav-link" to="/admin" onClick={closeNavbar}>
                   Admin
                 </Link>
               </li>
             )}
             {isAdmin && (
               <li className="nav-item">
-                <Link className="nav-link" to="/arqueo">
+                <Link className="nav-link" to="/arqueo" onClick={closeNavbar}>
                   Arqueo
                 </Link>
               </li>
             )}
             {isAdmin && (
             <NavDropdown title="Acciones" id="operaciones-dropdown">
-              <NavDropdown.Item as={Link} to="/arqueo">
+              <NavDropdown.Item as={Link} to="/arqueo" onClick={closeNavbar}>
                 Arqueo
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/cocina">
+              <NavDropdown.Item as={Link} to="/cocina" onClick={closeNavbar}>
                 Cocina
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item as={Link} to="/operacion3">
+              <NavDropdown.Item as={Link} to="/operacion3" onClick={closeNavbar}>
                 <a className="nav-link disabled" aria-disabled="true">
                   Futura Acción
                 </a>
