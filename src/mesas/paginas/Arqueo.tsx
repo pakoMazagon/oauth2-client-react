@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import '../css/arqueo.css';
 import ArquearModal from './componentes/ArquearModal';
-import { Button, Modal } from 'react-bootstrap';
+import { Alert, Button, Modal } from 'react-bootstrap';
 
 const {VITE_BACK_ROOT} = import.meta.env;
 
@@ -115,7 +115,7 @@ const Arqueo: React.FC = () => {
       setError('');
     } catch (err) {
       setError("Hubo un problema al buscar los datos de arqueo.");
-      console.error(err);
+      setError(`Error buscar arqueo: ${error}`);
     }
   };
   
@@ -361,9 +361,13 @@ const Arqueo: React.FC = () => {
           </Button>
         </Modal.Footer>        
       </Modal>      
-
-    </div>
-  )
+      {error && (
+        <Alert key="danger" variant="danger" onClose={() => setError('')} dismissible>
+            {error}
+        </Alert>
+      )}
+    </div>    
+  )  
 }
 
 export default Arqueo

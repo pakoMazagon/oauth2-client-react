@@ -16,6 +16,7 @@ const DestinoMesa = ({id, mesaReferencia, nombre, numero, sector, ocupada,camare
     const {nombreCamarero} = useCamarero();
     const { updateMesaConProductos: updateMesaConProductos, fetchMesaById } = useMesas(); // Consumimos el contexto
     const [mesaOcupadaAlert, setMesaOcupadaAlert] = useState(null);
+    const [error, setError] = useState<string | null>(null);
     
     useEffect(() =>{
         if(sector === 'salonComedor'){
@@ -86,6 +87,7 @@ const DestinoMesa = ({id, mesaReferencia, nombre, numero, sector, ocupada,camare
             navigate(`/mesas/${sector}/${numero}`);
         } catch (error) {
             console.error('Error en la llamada al backend:', error);
+            setError(`Error llamada al backend: ${error}`);            
         }
     };
   return (    
@@ -111,6 +113,11 @@ const DestinoMesa = ({id, mesaReferencia, nombre, numero, sector, ocupada,camare
                         {mesaOcupadaAlert}
                     </Alert>
             )}
+            {error && (
+                    <Alert key="danger" variant="danger" onClose={() => setError(null)} dismissible>
+                        {error}
+                    </Alert>
+                )}
         </div>        
     </>
   )

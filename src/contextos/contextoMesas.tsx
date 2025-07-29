@@ -3,6 +3,7 @@ import { TokenService } from "../services/tokenService";
 import { Client, Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { ProductoInMesa } from "../productos/dominio/ProductoTypes";
+import { Alert } from "react-bootstrap";
 
 const {VITE_BACK_ROOT} = import.meta.env;
 
@@ -35,6 +36,7 @@ export function MesasContextProvider({children}: { children: React.ReactNode }) 
     
     const [mesas,setMesas] = useState<Mesa[]>([]);
     const [isLoggedIn, setIsLoggedIn] = useState(TokenService.isLogged());
+    const [error, setError] = useState<string | null>(null);
 
     // Obtención de datos desde el endpoint
     const fetchMesas = async () => {
@@ -57,6 +59,7 @@ export function MesasContextProvider({children}: { children: React.ReactNode }) 
             setMesas(data); // Guardamos las mesas
         } catch (error) {
             console.error(`ERROR in call MESAS ${error}`)
+            setError("Error cargando las mesas:"+error)
         } finally {
             console.log("call MESAS ended")
         }
@@ -136,7 +139,7 @@ export function MesasContextProvider({children}: { children: React.ReactNode }) 
             });
 
             if (!response.ok) {
-                throw new Error("Error en la llamada al backend");
+                throw new Error("Error en actualizar Mesa"+ response);
             }
 
             const updatedMesa = await response.json();
@@ -151,6 +154,7 @@ export function MesasContextProvider({children}: { children: React.ReactNode }) 
             console.log("Mesa actualizada con éxito");
         } catch (error) {
             console.error("Error al actualizar la mesa:", error);
+            setError(`Error carga pedidos: ${error}`);
         }
     };
 
@@ -182,7 +186,7 @@ export function MesasContextProvider({children}: { children: React.ReactNode }) 
             });
 
             if (!response.ok) {
-                throw new Error("Error en la llamada al backend");
+                throw new Error("Error en la llamada al backend:"+response);
             }
 
             // Actualizar el estado local de mesas
@@ -197,6 +201,7 @@ export function MesasContextProvider({children}: { children: React.ReactNode }) 
             console.log("Nombre Mesa actualizado con éxito");
         } catch (error) {
             console.error("Error al actualizar la mesa:", error);
+            setError("error al actualizar la mesa:"+error);
         }
     };
 
@@ -301,7 +306,14 @@ useEffect(() => {
 
   return (
     <MesasContext.Provider value={{mesas, fetchMesas, updateMesaConProductos: updateMesaConProductos,updateMesaAccion: updateMesaAccion, fetchMesaById}}>
-        {children}
+        <>
+            {error && (
+                    <Alert key="danger" variant="danger" onClose={() => setError(null)} dismissible>
+                        {error}
+                    </Alert>
+                )}
+            {children}
+        </>        
     </MesasContext.Provider>
   )
 }

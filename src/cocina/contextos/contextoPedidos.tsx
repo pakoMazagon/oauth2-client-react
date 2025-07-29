@@ -2,6 +2,7 @@ import { Client } from "@stomp/stompjs";
 import { createContext, useContext, useEffect, useState } from "react";
 import SockJS from "sockjs-client";
 import { ProductoInMesa } from "../../productos/dominio/ProductoTypes";
+import Alert from 'react-bootstrap/Alert';
 
 const {VITE_BACK_ROOT} = import.meta.env;
 
@@ -21,6 +22,7 @@ type Pedido = {
 const PedidosContext = createContext<PedidosContextType | undefined>(undefined);
 
 export const PedidosProvider = ({ children }: { children: React.ReactNode }) => {
+    const [error, setError] = useState<string | null>(null);
     const [pedidos, setPedidos] = useState<Pedido[]>([]);
 
     useEffect(() => {
@@ -62,17 +64,26 @@ export const PedidosProvider = ({ children }: { children: React.ReactNode }) => 
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
             });
-            if (!res.ok) throw new Error("Error al obtener pedidos");
+            if (!res.ok) throw new Error("Error al obtener pedidos" + res);
             const data = await res.json();
             setPedidos(data);
+            setError(null);
         } catch (error) {
             console.error("Fallo al cargar pedidos:", error);
+            setError(`Error carga pedidos: ${error}`);
         }
     };
 
     return (
         <PedidosContext.Provider value={{ pedidos, fetchPedidos }}>
-            {children}
+            <>
+                {error && (
+                    <Alert key="danger" variant="danger" onClose={() => setError(null)} dismissible>
+                        {error}
+                    </Alert>
+                )}
+                {children}
+            </>
         </PedidosContext.Provider>
     );
 };
