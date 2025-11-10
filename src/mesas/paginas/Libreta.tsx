@@ -25,6 +25,10 @@ import EstadoModal from "./componentes/EstadoModal.js";
 import BorraMesaModal from "./componentes/BorraMesaModal.js";
 import CobroMesaModal from "./componentes/CobroMesaModal.js";
 import {CambiarCamareroModal} from "./componentes/CambiarCamareroModal.tsx";
+import FacturaModal from "./componentes/FacturaModal.tsx";
+
+const {VITE_BACK_ROOT} = import.meta.env;
+
 
 
 const Libreta = () => {    
@@ -34,6 +38,21 @@ const Libreta = () => {
     const [searchProducto, setSearchProducto] = useState('');
     const[productosBusqueda, setProductosBusqueda] = useState([]);
     const [mostrarListaInput, setMostrarListaInput] = useState(false);    
+    const mesaEncontrada = mesas.find(dato => dato.sector===sector && dato.numero==numero);
+    const [showFacturaModal, setShowFacturaModal] = useState(false);
+
+    async function printTicket() {
+      const token = localStorage.getItem('access_token');
+      const res = await fetch(`${VITE_BACK_ROOT}/mesas/${mesaEncontrada.id}/imprimir`, {
+        method: 'POST' ,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+    });
+      if (!res.ok) throw new Error('Print failed');
+      return res.text();
+    }
 
     const cambiarBusquedaProducto = (e) => {
       console.log("Texto buscado:", e);      
@@ -47,9 +66,7 @@ const Libreta = () => {
           console.log("Productos buscados:", dataProductos.filter(p => p.nombre.toLowerCase().includes(e.toLowerCase())));      
           setMostrarListaInput(true); // Mantener la lista visible
       }      
-    }
-    
-    const mesaEncontrada = mesas.find(dato => dato.sector===sector && dato.numero==numero);
+    }    
 
     const formatDateToISO = (date) => {
       if (!date) return null; // Manejar fechas nulas
@@ -233,10 +250,10 @@ const Libreta = () => {
       {/* <!-- Barra de acciones --> */}
         <div id="actionBar" className={mostrarActionBar ? "mostrar" : ""}>
           <button onClick={volver}>
-            <img src={imgSalir} alt="Imprimir" />
+            <img src={imgSalir} alt="Salir" />
             <div className="actionLabel">Volver</div>
           </button>
-          <button onClick={() => console.log("Imprimir")}>
+          <button onClick={() => printTicket()}>
             <img src={imgImprimir} alt="Imprimir" />
             <div className="actionLabel">Imprimir</div>
           </button>
@@ -248,7 +265,7 @@ const Libreta = () => {
             <Image src={imgTpv} alt="TPV" roundedCircle/>
             <div className="actionLabel">TPV</div>
           </button>
-          <button onClick={() => console.log("Factura")}>
+          <button onClick={() => setShowFacturaModal(true)}>
             <Image src={imgFactura} alt="Factura" rounded/>
             <div className="actionLabel">Factura</div>
           </button>
@@ -387,8 +404,32 @@ const Libreta = () => {
         onSuccess={() =>{
           volver();
           //Opcional: Toast recarga....
+        }}        
+      />
+      <FacturaModal
+        show={showFacturaModal}
+        onHide={() => setShowFacturaModal(false)}
+        onSubmit={async (facturaData) => {
+          console.log("Factura enviada:", facturaData);
+          try {
+            const token = localStorage.getItem("access_token");
+            const res = await fetch(`${VITE_BACK_ROOT}/api/print/factura`, {
+              method: "POST",
+              headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(facturaData),
+            });
+            if (!res.ok) throw new Error("Error al emitir factura");
+            alert("Factura generada correctamente 🧾");
+          } catch (err) {
+            console.error(err);
+            alert("No se pudo emitir la factura");
+          }
         }}
       />
+
     </div>
   )
 }
