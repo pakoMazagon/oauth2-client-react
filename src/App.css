@@ -1,7 +1,164 @@
 #root {
-  /* max-width: 1280px; */
   width: 100%;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
 }
+
+/* === Fondo general === */
+.home-tpv {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(
+    135deg,
+    #f8f6f1 0%,
+    #f0e5d4 45%,
+    #f8eedf 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: #2f2f2f;
+  font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Textura tipo lino, casi imperceptible */
+.home-tpv::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("https://www.transparenttextures.com/patterns/white-linen.png");
+  opacity: 0.1;
+  z-index: 0;
+}
+
+/* Overlay cálido con reflejos dorados suaves */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 40%,
+    rgba(255, 215, 150, 0.25),
+    transparent 70%
+  );
+  z-index: 1;
+}
+
+/* === Contenido === */
+.content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  animation: fadeIn 1.8s ease-out;
+}
+
+.logo {
+  width: 220px;
+  height: auto;
+  margin-bottom: 30px;
+  animation:
+    pulseIn 2s ease-out,
+    elegantFloat 6s ease-in-out infinite;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1))
+          drop-shadow(0 0 15px rgba(210, 180, 90, 0.35));
+}
+
+/* === Tipografía === */
+.title {
+  font-size: 2.6rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  letter-spacing: 1.2px;
+  color: #b4924a;
+  text-shadow: 0 0 8px rgba(230, 210, 160, 0.25);
+  animation: slideUp 1.4s ease-out 0.3s both;
+}
+
+.subtitle {
+  font-size: 1.15rem;
+  color: #6b6b6b;
+  animation: slideUp 1.4s ease-out 0.6s both;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* === Animaciones === */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulseIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Movimiento del logo más visible pero elegante */
+@keyframes elegantFloat {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateY(-10px) rotate(-2deg) scale(1.03);
+  }
+  50% {
+    transform: translateY(0) rotate(1deg) scale(1.02);
+  }
+  75% {
+    transform: translateY(8px) rotate(-1deg) scale(1.01);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(25px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.nombre-camarero {
+  color: #c0392b; /* rojo elegante */
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(192, 57, 43, 0.4);
+  animation: pulseColor 2s ease-in-out infinite;
+}
+
+/* Animación del color y brillo */
+@keyframes pulseColor {
+  0% {
+    color: #c0392b;
+    text-shadow: 0 0 10px rgba(192, 57, 43, 0.4);
+  }
+  50% {
+    color: #e74c3c;
+    text-shadow: 0 0 20px rgba(231, 76, 60, 0.6);
+  }
+  100% {
+    color: #c0392b;
+    text-shadow: 0 0 10px rgba(192, 57, 43, 0.4);
+  }
+}
+

@@ -106,13 +106,13 @@ const Menu = () => {
                 Home
               </Link>
             </li>
-            {isLogged && (
+            {/* {isLogged && (
               <li className="nav-item">
                 <Link className="nav-link" to="/user" onClick={closeNavbar}>
                   User
                 </Link>
               </li>
-            )}
+            )} */}
             {isLogged && (
               <li className="nav-item">
                 <Link className="nav-link" to="/mesas" onClick={closeNavbar}>
@@ -120,13 +120,13 @@ const Menu = () => {
                 </Link>
               </li>
             )}
-            {isAdmin && (
+            {/* {isAdmin && (
               <li className="nav-item">
                 <Link className="nav-link" to="/admin" onClick={closeNavbar}>
                   Admin
                 </Link>
               </li>
-            )}
+            )} */}
             {isAdmin && (
               <li className="nav-item">
                 <Link className="nav-link" to="/arqueo" onClick={closeNavbar}>
