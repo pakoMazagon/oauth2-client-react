@@ -396,3 +396,124 @@
       display: none;
     }
   }
+
+  /* =========================================================
+     AJUSTES PARA PANTALLAS 4:3 (ej. 1024x768)
+     ========================================================= */
+     @media (min-width: 1000px) and (max-width: 1100px) and (max-height: 800px) {
+    
+      /* Reducimos la escala general */
+      #layoutLibreta {
+        grid-template-columns: 48% 52%;
+        zoom: 0.9; /* Escala ligera para que todo entre */
+      }
+  
+      /* Familia de productos: tarjetas más pequeñas */
+      .familiasGrid {
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      }
+  
+      .productosGrid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      }
+  
+      .productosGrid .card {
+        font-size: 13px;
+        padding: 6px;
+      }
+  
+      /* Libreta: texto y tabla más compactos */
+      #libreta table {
+        font-size: 13px;
+      }
+      #libreta th, #libreta td {
+        padding: 2px;
+      }
+  
+      #libretaTable img {
+        width: 22px;
+        height: 22px;
+      }
+  
+      #actionBar img {
+        width: 25px;
+        height: 25px;
+      }
+  
+      #actionBar .actionLabel {
+        font-size: 11px;
+      }
+    }
+
+   /* ------------------------------ */
+/*   Ajustes finos para monitores 4:3 (ej. 1024x768)   */
+/* ------------------------------ */
+@media screen and (max-width: 1100px) and (min-aspect-ratio: 3/4) {
+
+  /* Reajuste general del layout */
+  #layoutLibreta {
+    grid-template-columns: 55% 45%;
+  }
+
+  /* ----- LIBRETA ----- */
+  #libretaTable {
+    font-size: 0.88rem;
+    padding-right: 8px;       /* espacio para ver el total sin scroll */
+    transform: scale(0.96);   /* ligera reducción visual */
+    transform-origin: top left;
+    overflow-x: hidden;       /* elimina el scroll horizontal */
+  }
+
+  #libretaTable table {
+    width: 100%;              /* ocupa todo el ancho disponible */
+    table-layout: auto;       /* deja que las columnas se ajusten solas */
+  }
+
+  #libreta th,
+  #libreta td {
+    padding: 2px;
+    word-wrap: break-word;    /* rompe palabras largas si es necesario */
+  }
+
+  #libreta .CantidadTabla {
+    font-size: 13px;
+  }
+
+  #libretaTable img {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* ----- FAMILIAS / PRODUCTOS ----- */
+  .familiasGrid {
+    grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+    gap: 3px;
+  }
+
+  .productosGrid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.5px;
+  }
+
+  #familiasContainer .nav-link {
+    font-size: 12px ;
+  }
+
+  /* ----- ACTION BAR ----- */
+  #actionBar img {
+    width: 24px;
+    height: 24px;
+  }
+
+  #actionBar .actionLabel {
+    font-size: 11px;
+  }
+
+  /* Reduce los márgenes para aprovechar ancho */
+  #familiaProductosDesktop {
+    padding-left: 2px;
+    padding-top: 0;
+    padding-right: 2px;
+  }
+}
+
