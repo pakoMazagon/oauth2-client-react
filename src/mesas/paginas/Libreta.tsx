@@ -104,7 +104,9 @@ const Libreta = () => {
     }, [mesas]); // Se ejecuta cuando cambian las mesas en el contexto
   
     
-    const familias = [...new Set(dataProductos.map(p => p.familia))];
+    const familias = [...new Set(dataProductos.map(p => p.familia))].sort((a, b) =>
+      a.localeCompare(b)
+    );;
     const productosEnFamilia = dataProductos.filter(p => p.familia === 'bebidas')
 
     const [productosSeleccionados, setProductosSeleccionados] = useState<ProductoInMesa[]>(mesaEncontrada.products || []);

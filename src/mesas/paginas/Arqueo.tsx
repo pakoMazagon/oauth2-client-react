@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import '../css/arqueo.css';
 import ArquearModal from './componentes/ArquearModal';
-import { Alert, Button, Modal } from 'react-bootstrap';
+import { Alert, Button, Modal, Dropdown } from 'react-bootstrap';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const {VITE_BACK_ROOT} = import.meta.env;
 
@@ -232,49 +233,56 @@ const Arqueo: React.FC = () => {
               </select>
             </div>
             
-            <div className="col-md-4 position-relative">
+            <div className="col-md-4">
               <label className="form-label">Sector</label>
-              <div className="dropdown">
-                <button
-                  className="form-select text-start"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  {sectoresSeleccionados.length === 0
-                    ? '-- Todos --'
-                    : sectoresDisponibles
-                        .filter(s => sectoresSeleccionados.includes(s.value))
-                        .map(s => s.label)
-                        .join(', ')
-                  }
-                </button>
-                <ul className="dropdown-menu p-2" style={{ minWidth: '100%' }}>
-                  {sectoresDisponibles.map((sector) => (
-                    <li key={sector.value}>
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id={`sector-${sector.value}`}
-                          value={sector.value}
-                          checked={sectoresSeleccionados.includes(sector.value)}
-                          onChange={(e) => {
-                            const { value, checked } = e.target;
-                            setSectoresSeleccionados((prev) =>
-                              checked ? [...prev, value] : prev.filter((s) => s !== value)
-                            );
-                          }}
-                        />
-                        <label className="form-check-label" htmlFor={`sector-${sector.value}`}>
-                          {sector.label}
-                        </label>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {/* 🚀 REEMPLAZO CON REACT-BOOTSTRAP COMPONENT */}
+              <Dropdown autoClose="outside">
+                  
+                  {/* === BOTÓN DE TOGGLE === */}
+                  <Dropdown.Toggle 
+                      variant="light" 
+                      id="dropdown-sector"
+                      className="form-select text-start d-flex justify-content-between align-items-center"
+                  >
+                      {sectoresSeleccionados.length === 0
+                          ? '-- Todos --'
+                          : sectoresDisponibles
+                              .filter(s => sectoresSeleccionados.includes(s.value))
+                              .map(s => s.label)
+                              .join(', ')
+                      }
+                  </Dropdown.Toggle>
+
+                  {/* === MENÚ DESPLEGABLE === */}
+                  <Dropdown.Menu className="p-2" style={{ minWidth: '100%' }}>
+                      {sectoresDisponibles.map((sector) => (
+                          <li key={sector.value}>
+                              <div className="form-check">
+                                  <input
+                                      className="form-check-input"
+                                      type="checkbox"
+                                      id={`sector-${sector.value}`}
+                                      value={sector.value}
+                                      checked={sectoresSeleccionados.includes(sector.value)}
+                                      onChange={(e) => {
+                                          const { value, checked } = e.target;
+                                          setSectoresSeleccionados((prev) =>
+                                              checked
+                                                  ? [...prev, value]
+                                                  : prev.filter((s) => s !== value)
+                                          );
+                                      }}
+                                  />
+                                  <label className="form-check-label" htmlFor={`sector-${sector.value}`}>
+                                      {sector.label}
+                                  </label>
+                              </div>
+                          </li>
+                      ))}
+                  </Dropdown.Menu>
+              </Dropdown>
             </div>
+
 
 
             <div className="col-12">
@@ -344,17 +352,16 @@ const Arqueo: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {resultado.map((row, idx) => (
-                      <tr key={idx}>                    
-                        {Object.entries(row)
-                          .filter(([key]) => !columnasOcultas.includes(key))
-                          .map(([key, val], i) => (
-                            <td key={i}>
-                              {formatearValor(key, val)}
-                            </td>
-                          ))}
+                  {resultado.map((row, idx) => {
+                    const columnas = Object.keys(resultado[0]).filter(key => !columnasOcultas.includes(key));
+                    return (
+                      <tr key={idx}>
+                        {columnas.map((col, i) => (
+                          <td key={i}>{formatearValor(col, row[col])}</td>
+                        ))}
                       </tr>
-                    ))}
+                    );
+                  })}
                   </tbody>
                 </table>
               </div>

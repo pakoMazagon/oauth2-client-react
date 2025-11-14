@@ -25,3 +25,7 @@
     background-color: #0053ba;
   }
   
+  .arqueo-form .dropdown {
+    position: relative;
+    overflow: visible !important;
+  }
